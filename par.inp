@@ -1,0 +1,46 @@
+FFT PLAN TYPE     =3
+OPENMP THREADS    =8
+OUTPUT GRAD. E.   =0
+OUTPUT FAULT E.   =1
+OUTPUT ETAS       =0
+INIT. BENCHMARK   =0
+--------------------------
+SYSTEM SIZE X     =220
+SYSTEM SIZE Y     =32
+SYSTEM SIZE Z     =60
+BORDER            =0
+TOTAL TIME        =0100.00
+TIME STEP         =0.10000
+NUMBER OF OUTPUTS =10
+2D OR 3D OUTPUT?  =2
+2D SLICE AXIS     =2
+2D SLICE POSITION =16
+--------------------------
+LATTICE PARAMETER =03.5700
+C11               =0224.00
+C12               =0148.00
+C44               =0125.00
+SCALING FACTOR    =001.000
+APPLIED STRESS    =0.01000
+S11               =0000.00
+S12               =0001.00
+S13               =0000.00
+S21               =0001.00
+S22               =0000.00
+S23               =0000.00
+S31               =0000.00
+S32               =0000.00
+S33               =0000.00
+BETA (GRAD COEF.) =0.50000
+--------------------------
+SLIP SYSTEM       =1
+ROTATE CRYSTAL?   =1
+ROTATED X-AXIS    = 1 0-1 
+ROTATED Y-AXIS    = 1 1 1 
+ROTATED Z-AXIS    = 1-2 1 
+--------------------------
+NO. OF PHASES     =1
+G SURFACE PHASE 1 =10
+G SURFACE PHASE 2 =22
+--------------------------
+INITIAL CONDITION =2
