@@ -308,7 +308,7 @@
         ELSE IF(GSF_EQ(PHID) == 11) THEN
           FE(IX,IY,IZ) =FE(IX,IY,IZ) + (
      &      GC(PHID,1)+
-     &      GC(PHID,2)*(COS(PI*(E1-E2))+COS(PI*(E2-E3))+                                             
+     &      GC(PHID,2)*(COS(PI*(E1-E2))+COS(PI*(E2-E3))+
      &        COS(PI*(E3-E1))) +
      &      GC(PHID,3)*(COS(PI*(2*E1-E2-E3))+
      &        COS(PI*(2*E2-E3-E1))+
@@ -340,7 +340,7 @@
         ELSE IF(GSF_EQ(PHID) == 12) THEN
           FE(IX,IY,IZ) =FE(IX,IY,IZ) + (
      &      GC(PHID,1)+
-     &      GC(PHID,2)*(COS(PI*(E1-E2))+COS(PI*(E2-E3))+                                             
+     &      GC(PHID,2)*(COS(PI*(E1-E2))+COS(PI*(E2-E3))+
      &        COS(PI*(E3-E1))) +
      &      GC(PHID,3)*(COS(PI*(2*E1-E2-E3))+
      &        COS(PI*(2*E2-E3-E1))+
@@ -432,17 +432,17 @@
 ! OUTPUT FE
       IF (OUTDIM ==2) THEN
         IF (SLICE_AXIS == 1) THEN        
-          WRITE(21,*) 'T=',STEPID*DT
+!          WRITE(21,*) 'T=',STEPID*DT
           WRITE(21,*) ((FE(SLICE_POS,IY,IZ),IZ=1,NZ),IY=1,NY)
         ELSE IF (SLICE_AXIS == 2) THEN        
-          WRITE(21,*) 'T=',STEPID*DT
+!          WRITE(21,*) 'T=',STEPID*DT
           WRITE(21,*) ((FE(IX,SLICE_POS,IZ),IZ=1,NZ),IX=1,NX)
         ELSE IF (SLICE_AXIS == 3) THEN        
-          WRITE(21,*) 'T=',STEPID*DT
+!          WRITE(21,*) 'T=',STEPID*DT
           WRITE(21,*) ((FE(IX,IY,SLICE_POS),IY=1,NY),IX=1,NX)
         END IF  
       ELSE IF (OUTDIM == 3) THEN
-        WRITE(21,*) 'T=',STEPID*DT
+!        WRITE(21,*) 'T=',STEPID*DT
         WRITE(21,*) (((FE(IX,IY,IZ),IZ=1,NZ),IY=1,NY),IX=1,NX)      
       END IF
 ! 
@@ -494,7 +494,7 @@
       ELSE IF (OUTDIM == 3) THEN
         DO SA=1,NP
         DO SMA=1,NQ
-        WRITE(UNITCOUNT,*) 'T=',STEPID*DT
+!        WRITE(UNITCOUNT,*) 'T=',STEPID*DT
         WRITE(UNITCOUNT,*) (((ETA(SA,SMA,IX,IY,IZ),IZ=1,NZ)
      &  ,IY=1,NY),IX=1,NX)
         UNITCOUNT=UNITCOUNT+1

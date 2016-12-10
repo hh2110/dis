@@ -60,7 +60,7 @@
 ! CONDITION-1 EDGE CONFIGURATION a/2<110> IN SINGLE PHASE
 !-----------------------------------------------------------------------
       ELSE IF(NIN  ==  2) THEN
-      PRINT *,'>>NOTE - EDGE a/2[10-1] vs SPHERICAL PRECIPITATE'      
+      PRINT *,'>>NOTE - EDGE a/2[10-1] vs single phase'      
 ! DEFINE INITIAL VARIABLE FIELDS - ETA(1,2)
         DO IZ=1,NZ
         DO IY=NY/2,NY/2
@@ -76,7 +76,7 @@
         DO IZ=1,NZ
         DO IY=1,NY
         DO IX=1,NX
-          PHI(IX,IY,IZ)=0.0
+          PHI(IX,IY,IZ)=1.0
         END DO
         END DO
         END DO         
@@ -233,26 +233,26 @@
           UNITCOUNT=91            
           WRITE (FILENAME,'(A7)')'phi.dis'                 
           OPEN (UNIT = UNITCOUNT, FILE=FILENAME, FORM = 'FORMATTED')
-          WRITE (UNITCOUNT,*) ((PHI(IX,IY,IZ),IZ=1,NZ),IY=1,NY)
+          WRITE (UNITCOUNT,*) ((PHI(SLICE_POS,IY,IZ),IZ=1,NZ),IY=1,NY)
           CLOSE(UNITCOUNT)              
         ELSE IF (SLICE_AXIS == 2) THEN
 ! SLICE ALONG Y-AXIS AT SLICE_POS        
           UNITCOUNT=91            
           WRITE (FILENAME,'(A7)')'phi.dis'                 
           OPEN (UNIT = UNITCOUNT, FILE=FILENAME, FORM = 'FORMATTED')
-          WRITE (UNITCOUNT,*) ((PHI(IX,IY,IZ),IZ=1,NZ),IX=1,NX)
+          WRITE (UNITCOUNT,*) ((PHI(IX,SLICE_POS,IZ),IZ=1,NZ),IX=1,NX)
           CLOSE(UNITCOUNT)              
         ELSE IF (SLICE_AXIS == 3) THEN
 ! SLICE ALONG Z-AXIS AT SLICE_POS        
           UNITCOUNT=91            
           WRITE (FILENAME,'(A7)')'phi.dis'                 
           OPEN (UNIT = UNITCOUNT, FILE=FILENAME, FORM = 'FORMATTED')
-          WRITE (UNITCOUNT,*) ((PHI(IX,IY,IZ),IY=1,NY),IX=1,NX)
+          WRITE (UNITCOUNT,*) ((PHI(IX,IY,SLICE_POS),IY=1,NY),IX=1,NX)
           CLOSE(UNITCOUNT)                       
         END IF
 ! WRITE 3D MICROSTRUCTURE TO FILE        
       ELSE IF (OUTDIM == 3) THEN
-        ELSE IF (OUTDIM == 3) THEN 
+!        ELSE IF (OUTDIM == 3) THEN 
 !
           UNITCOUNT=91
 !          
