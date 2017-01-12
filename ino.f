@@ -8,18 +8,20 @@
 !
 ! READ PARAMETER VALUES FROM EXTERNAL INPUT FILE (par.inp)
       OPEN(UNIT=11, FILE='par.inp', STATUS='UNKNOWN')
-      READ(11,100) FFTP,NOMP,OUTGE,OUTFE,OUTETAS,INITBENCH,
+      READ(11,100) FFTP,NOMP,OUTGE,OUTFE,OUTETAS,OUTCONC,INITBENCH,
      &         NX,NY,NZ,BORDER,T0,DT,OUT1,OUTDIM,SLICE_AXIS,SLICE_POS,
      &         AA,C11X,C12X,C44X,DXD,S_APP_MAG,
      &         S11,S12,S13,S21,S22,S23,S31,S32,S33,
      &         BETA,NSS,ROTFLAG,AXX(1),AXX(2),AXX(3),
      &         AXY(1),AXY(2),AXY(3),AXZ(1),AXZ(2),AXZ(3),
-     &         NPHIS,GSURF(1),GSURF(2),NIN
+     &         NPHIS,GSURF(1),GSURF(2),GSURF(3),NIN,
+     &         ONDIFF
 ! PARAMETER LIST
 100   FORMAT(19X, I3/,
      &       19X, I3/,
      &       19X, I3/,     
      &       19X, I3/,
+     &       19X, I3/,     
      &       19X, I3/,     
      &       19X, I3/,
      &       26X/,    
@@ -60,7 +62,9 @@
      &       19X, I3/,
      &       19X, I3/,     
      &       19X, I3/,
+     &       21X, I3/,
      &       26X/,       
+     &       19X, I3/,
      &       19X, I3)
 
       CLOSE(11)
@@ -72,6 +76,7 @@
       PRINT '(" OUTPUT GRAD. E.   =",I8)', OUTGE
       PRINT '(" OUTPUT FAULT E.   =",I8)', OUTFE
       PRINT '(" OUTPUT ETAS       =",I8)', OUTETAS
+      PRINT '(" OUTPUT CONC       =",I8)', OUTCONC
       PRINT '(" INIT. BENCHMARK   =",I8)', INITBENCH
       PRINT '(" ---------------------------")'        
       PRINT '(" SYSTEM SIZE X     =",I8)', NX
@@ -114,8 +119,10 @@
       PRINT '(" NO. OF PHASES     =",I8)',NPHIS      
       PRINT '(" GAMMA SURFACE G   =",I8)',GSURF(1)
       PRINT '(" GAMMA SURFACE GP  =",I8)',GSURF(2)
+      PRINT '(" GAMMA SURFACE GP CS  =",I8)',GSURF(3)
       PRINT '(" ---------------------------")'        
       PRINT '(" INITIAL CONDITION =",I8)',NIN
+      PRINT '(" DIFFUSION ON? =",I8)',ONDIFF
 ! VERIFY PARAMETERS
 !      
       IF(INITBENCH /= 0 .AND. INITBENCH /=1) THEN
@@ -149,7 +156,35 @@
         C12=C12/DXD
         C44=C44/DXD
 !                
+!-----------------------------------------------------------------------
       END SUBROUTINE PAR
+!-----------------------------------------------------------------------
+! SUBROUTINE TO OUTPUT GRADIENT ENERGY
+!-----------------------------------------------------------------------
+      SUBROUTINE OCE(STEPID)
+      USE VAR 
+      IMPLICIT NONE
+! DEFINE VARIABLES     
+      INTEGER :: STEPID
+      INTEGER :: IX,IY,IZ
+! PRINT CONC TO FILE #50
+      IF (OUTDIM ==2) THEN
+        IF (SLICE_AXIS == 1) THEN        
+!          WRITE(50,*) 'T=',STEPID*DT
+          WRITE(50,*) ((CONC(SLICE_POS,IY,IZ),IZ=1,NZ),IY=1,NY)
+        ELSE IF (SLICE_AXIS == 2) THEN        
+!          WRITE(50,*) 'T=',STEPID*DT
+          WRITE(50,*) ((CONC(IX,SLICE_POS,IZ),IZ=1,NZ),IX=1,NX)
+        ELSE IF (SLICE_AXIS == 3) THEN        
+!          WRITE(50,*) 'T=',STEPID*DT
+          WRITE(50,*) ((CONC(IX,IY,SLICE_POS),IY=1,NY),IX=1,NX)
+        END IF  
+      ELSE IF (OUTDIM == 3) THEN
+!        WRITE(50,*) 'T=',STEPID*DT
+        WRITE(50,*) (((CONC(IX,IY,IZ),IZ=1,NZ),IY=1,NY),IX=1,NX)      
+      END IF
+! 
+      END SUBROUTINE OCE
 !-----------------------------------------------------------------------
 ! SUBROUTINE TO OUTPUT GRADIENT ENERGY
 !-----------------------------------------------------------------------
@@ -512,6 +547,16 @@
       INTEGER :: SA,SMA      !! SLIP PLANE AND DIRECTION IDs
       INTEGER :: UNITCOUNT   !! OUTPUT FILE NUMBER (UNIT)
 !
+!-----------------------------------------------------------------------
+!------WILL NEED TO DELETE LATER----------------------------------------
+      OPEN(UNIT=1011,FILE='timer.dat',STATUS='UNKNOWN')
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+      IF (OUTCONC==0) THEN
+      ELSE IF (OUTCONC==1) THEN
+      OPEN(UNIT=50,FILE='conc.dis',STATUS='UNKNOWN')
+      END IF
+!
       IF (OUTGE==0) THEN
       ELSE IF (OUTGE==1) THEN
       OPEN(UNIT=20,FILE='ge.dis',STATUS='UNKNOWN')
@@ -534,7 +579,7 @@
         UNITCOUNT=UNITCOUNT+1
         END DO
         END DO
- !     
+!     
       END IF
       END SUBROUTINE OPN
 !-----------------------------------------------------------------------
@@ -546,6 +591,12 @@
       INTEGER :: SA,SMA      !! SLIP PLANE AND DIRECTION IDs
       INTEGER :: UNITCOUNT   !! OUTPUT FILE NUMBER (UNIT)      
 ! CLOSE ALL FILES
+!
+      IF (OUTCONC==0) THEN
+        PRINT *,'>>NOTE - CONCENTRATION WILL NOT BE SAVED'
+      ELSE IF (OUTCONC==1) THEN
+      CLOSE(50)
+      END IF
 !
       IF (OUTGE==0) THEN
         PRINT *,'>>NOTE - GRADIENT ENERGY WILL NOT BE SAVED'
@@ -636,3 +687,10 @@
       END IF
 !      
       END SUBROUTINE FET      
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+! FUNCTION TO CALCULATE GSFE USING SINGLE FUNCTION
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------

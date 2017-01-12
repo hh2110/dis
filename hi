@@ -1,0 +1,1414 @@
+ _|_|_|    _|_|_|    _|_|_|
+ _|    _|    _|    _|
+ _|    _|    _|      _|_|
+ _|    _|    _|          _|
+ _|_|_|    _|_|_|  _|_|_|
+ 
+ DISLOCATION INTERACTION SIMILATOR
+ VERSION 1.0 BETA
+ 
+ BASED ON THE ORIGINAL PHASE FIELD MODEL BY DR. CHEN SHEN and PROF. YUNZHI WANG
+ IMPLEMENTING THE KHACHATURYAN-SHATALOV ELASTIC INCLUSION THEORY
+ 
+ CREATED BY: VASSILI VORONTSOV and HIKMATYAR HASAN
+ EMAIL QUESTIONS, BUG REPORTS AND SUGGESTIONS TO: vassili.vorontsov@gmail.com
+ 
+ <<BEGINNING RUN>>
+ 
+ INITIALISING - CELL PARAMETERS FROM "PAR.INP"
+ 
+ >>NOTE - CHECK SIMULATION PARAMETERS
+ FFT PLAN TYPE     =       3
+ OPENMP THREADS    =       8
+ OUTPUT GRAD. E.   =       0
+ OUTPUT FAULT E.   =       1
+ OUTPUT ETAS       =       1
+ OUTPUT CONC       =       1
+ INIT. BENCHMARK   =       0
+ ---------------------------
+ SYSTEM SIZE X     =      50
+ SYSTEM SIZE Y     =      16
+ SYSTEM SIZE Z     =      16
+ BORDER            =       0
+ TOTAL TIME        =   10.00
+ TIME STEP         = 0.10000
+ NUMBER OF OUTPUTS =       5
+ 2D OR 3D OUTPUT?  =       3
+ 2D SLICE AXIS     =       2
+ 2D SLICE POSITION =       8
+ ---------------------------
+ LATTICE PARAMETER = 3.57000
+ C11               =  224.00
+ C12               =  148.00
+ C44               =  125.00
+ SCALING FACTOR    =   1.000
+ APPLIED STRESS    = 0.00500
+ S11               =    0.00
+ S12               =    1.00
+ S13               =    0.00
+ S21               =    1.00
+ S22               =    0.00
+ S23               =    0.00
+ S31               =    0.00
+ S32               =    0.00
+ S33               =    0.00
+ BETA (GRAD COEF.) = 0.50000
+ ---------------------------
+ SLIP SYSTEM       =       1
+ ROTATE CRYSTAL?   =       1
+ ROTATED X-AXIS    = 1. 0.-1.
+ ROTATED Y-AXIS    = 1. 1. 1.
+ ROTATED Z-AXIS    = 1.-2. 1.
+ ---------------------------
+ NO. OF PHASES     =       3
+ GAMMA SURFACE G   =      10
+ GAMMA SURFACE GP  =      23
+ GAMMA SURFACE GP CS  =      24
+ ---------------------------
+ INITIAL CONDITION =       2
+ DIFFUSION ON? =       1
+ 
+ >>NOTE - ELASTIC CONSTANTS, REDUCED and SCALED VALUES
+ C11= 224.00 GPa,    1.79,    1.79
+ C12= 148.00 GPa,    1.18,    1.18
+ C44= 125.00 GPa,    1.00,    1.00
+ 
+ INITIALISING - SLIP SYSTEMS
+ >>NOTE - (111) PLANE IN FCC CRYSTAL
+ >>NOTE - CRYSTAL AXES X,Y,Z=[100],[010],[001]
+ >>NOTE - APPLYING ROTATION MATRIX TO CRYSTAL AXES
+ >>NOTE - ORIGINAL AXES ROTATED BY THE FOLLOWING MATRIX
+  0.70711  0.00000 -0.70711
+  0.57735  0.57735  0.57735
+  0.40825 -0.81650  0.40825
+ 
+ INITIALISING - ALLOCATING ARRAYS
+ >>NOTE - YOU ARE COMPUTING   12800 POINTS
+ >>NOTE - EQUIVALENT CUBE SIZE  23.4 POINTS
+ 
+ INITIALISING - FAST FOURIER TRANSFORM FFTW3
+ >>NOTE - FFTW THREADS INITIALISED SUCCESSFULLY
+ >>NOTE - USING PATIENT FFT PLAN
+ >>NOTE - FFTW PLANS CREATED SUCCESSFULLY
+ >>NOTE - FFT PLANNING TIME =  2.13333 MINUTES.
+ 
+ INITIALISING - GSF DATA
+ 
+ >>NOTE - GSF FOURIER COEFFICIENTS
+ PHASE = PHI(3)
+ GC(3 1)=  851.07
+ GC(3 2)=  -51.96
+ GC(3 3)=  -10.71
+ GC(3 4)= -193.60
+ 
+ GC(3 5)=   -0.27
+ 
+ >>NOTE - GSF FOURIER COEFFICIENTS
+ GC(3 6)=   -4.29
+ >>NOTE - GSF FOURIER COEFFICIENTS
+ PHASE = PHI(2)
+ GC(3 7)=  -32.02
+ PHASE = PHI(1)
+ GC(2 1)=  848.98
+ GC(3 8)=    9.44
+ GC(1 1)=  376.23
+ GC(2 2)=  -51.96
+ GC(3 9)=    0.00
+ GC(1 2)=    0.00
+ GC(2 3)=   -6.54
+ GC(310)=   70.00
+ GC(1 3)=    0.00
+ GC(2 4)= -195.69
+ GC(311)= -342.44
+ GC(1 4)= -107.82
+ GC(2 5)=   -2.35
+ GC(312)=   -1.08
+ GC(1 5)=    0.00
+ GC(2 6)=   -4.29
+ GC(313)=   -5.00
+ GC(1 6)=    0.00
+ GC(2 7)=  -29.94
+ GC(314)=  -19.61
+ GC(1 7)=  -15.30
+ GC(2 8)=   10.13
+ GC(315)=    0.00
+ GC(1 8)=   -4.41
+ GC(2 9)=    0.00
+ GC(1 9)=    1.06
+ GC(210)=   70.00
+ GC(110)=    0.00
+ GC(211)= -338.83
+ GC(111)= -102.17
+ GC(212)=   -4.69
+ GC(112)=    0.00
+ GC(213)=   -5.00
+ GC(113)=    0.00
+ GC(214)=  -18.40
+ GC(114)=   35.87
+ GC(215)=    0.00
+ GC(115)=    8.69
+ 
+ INITIALISING - SLIP SYSTEMS
+ >>NOTE - (111) PLANE IN FCC CRYSTAL
+ >>NOTE - CRYSTAL AXES X,Y,Z=[100],[010],[001]
+ >>NOTE - APPLYING ROTATION MATRIX TO CRYSTAL AXES
+ >>NOTE - ORIGINAL AXES ROTATED BY THE FOLLOWING MATRIX
+  0.70711  0.00000 -0.70711
+  0.57735  0.57735  0.57735
+  0.40825 -0.81650  0.40825
+ 
+ INITIALISING - K^2 TABLE
+ 
+ INITIALISING - BPQ MATRIX
+ >>NOTE - BPQ INITIALISATION TIME =  0.00000 SECONDS.
+ 
+ INITIALISING - FIELD VARIABLES & MICROSTRUCTURE
+ >>NOTE - EDGE a/2[10-1] vs single phase
+ 
+ INITIALISING - APPLIED STRESS
+ 
+ >>NOTE - APPLIED STRESS MATRIX (REDUCED)
+ 0.00000 0.00500 0.00000
+ 0.00500 0.00000 0.00000
+ 0.00000 0.00000 0.00000
+ 
+ >>NOTE - APPLIED STRESS MATRIX (MPa)
+      0.    625.      0.
+    625.      0.      0.
+      0.      0.      0.
+ 
+ >>NOTE - APPLIED STRESS W.R.T. CRYSTAL AXES (REDUCED)
+ 0.00289 0.00354 0.00000
+ 0.00289 0.00000 0.00000
+ 0.00289-0.00354 0.00000
+ 
+ >>NOTE - APPLIED STRESS W.R.T. CRYSTAL AXES (MPa)
+    361.    442.      0.
+    361.      0.      0.
+    361.   -442.      0.
+ 
+ INITIALISING - CALCULATING FILE SIZES
+ >>NOTE - OUTPUT FILE SIZE =   1.088 MEGABYTES
+ >>NOTE - TOTAL DATA SIZE  =   5.223 MEGABYTES
+ 
+ <<BEGINNING SYSTEM EVOLUTION>>
+ HIHIHI
+   17.0102768    
+ HIHIHI
+   17.0102768    
+ diffc is    1.50001049E-03
+ HIHIHI
+   17.0102768    
+ diffc is    7.49826431E-05
+ HIHIHI
+   17.0515175    
+ HIHIHI
+   17.0515175    
+ diffc is    1.65787339E-03
+ HIHIHI
+   17.0515175    
+ diffc is    8.29100609E-05
+ HIHIHI
+   17.0102768    
+ HIHIHI
+   17.0102768    
+ diffc is    1.83236599E-03
+ HIHIHI
+   17.0102768    
+ diffc is    9.16421413E-05
+ HIHIHI
+   17.0102768    
+ HIHIHI
+   17.0102768    
+ diffc is    2.02521682E-03
+ HIHIHI
+   17.0102768    
+ diffc is    1.01268291E-04
+ HIHIHI
+   17.0102768    
+ HIHIHI
+   17.0102768    
+ diffc is    2.23836303E-03
+ HIHIHI
+   17.0102768    
+ diffc is    1.11937523E-04
+ HIHIHI
+   17.0102768    
+ HIHIHI
+   17.0102768    
+ diffc is    2.47395039E-03
+ HIHIHI
+   17.0102768    
+ diffc is    1.23679638E-04
+ HIHIHI
+   17.0102749    
+ HIHIHI
+   17.0102749    
+ diffc is    2.73436308E-03
+ HIHIHI
+   17.0102749    
+ diffc is    1.36733055E-04
+ HIHIHI
+   17.0102768    
+ HIHIHI
+   17.0102768    
+ diffc is    3.02213430E-03
+ HIHIHI
+   17.0102768    
+ diffc is    1.51097775E-04
+ HIHIHI
+   17.0189953    
+ HIHIHI
+   17.0189953    
+ diffc is    3.34024429E-03
+ HIHIHI
+   17.0189953    
+ diffc is    1.67012215E-04
+ HIHIHI
+   17.0293903    
+ HIHIHI
+   17.0293903    
+ diffc is    3.69179249E-03
+ HIHIHI
+   17.0293903    
+ diffc is    1.84595585E-04
+ HIHIHI
+   17.0359058    
+ HIHIHI
+   17.0359058    
+ diffc is    4.08035517E-03
+ HIHIHI
+   17.0359058    
+ diffc is    2.04026699E-04
+ HIHIHI
+   17.0384731    
+ HIHIHI
+   17.0384731    
+ diffc is    4.50980663E-03
+ HIHIHI
+   17.0384731    
+ diffc is    2.25484371E-04
+ HIHIHI
+   17.0383434    
+ HIHIHI
+   17.0383434    
+ diffc is    4.98437881E-03
+ HIHIHI
+   17.0383434    
+ diffc is    2.49266624E-04
+ HIHIHI
+   17.0375023    
+ HIHIHI
+   17.0375023    
+ diffc is    5.50913811E-03
+ HIHIHI
+   17.0375023    
+ diffc is    2.75373459E-04
+ HIHIHI
+   17.0349388    
+ HIHIHI
+   17.0349388    
+ diffc is    6.08897209E-03
+ HIHIHI
+   17.0349388    
+ diffc is    3.04460526E-04
+ HIHIHI
+   17.0312843    
+ HIHIHI
+   17.0312843    
+ diffc is    6.72984123E-03
+ HIHIHI
+   17.0312843    
+ diffc is    3.36408615E-04
+ HIHIHI
+   17.0270576    
+ HIHIHI
+   17.0270576    
+ diffc is    7.43806362E-03
+ HIHIHI
+   17.0270576    
+ diffc is    3.71932983E-04
+ HIHIHI
+   17.0226574    
+ HIHIHI
+   17.0226574    
+ diffc is    8.22091103E-03
+ HIHIHI
+   17.0226574    
+ diffc is    4.11033630E-04
+ HIHIHI
+   17.0299702    
+ HIHIHI
+   17.0299702    
+ diffc is    9.08625126E-03
+ HIHIHI
+   17.0299702    
+ diffc is    4.54187393E-04
+ HIHIHI
+   17.0372963    
+ HIHIHI
+   17.0372963    
+ diffc is    1.00424290E-02
+ HIHIHI
+   17.0372963    
+ diffc is    5.02109528E-04
+ HIHIHI
+   17.0440102    
+ HIHIHI
+   17.0440102    
+ diffc is    1.10993385E-02
+ HIHIHI
+   17.0440102    
+ diffc is    5.55038452E-04
+ TIME=    2.00
+ HIHIHI
+   17.0501671    
+ HIHIHI
+   17.0501671    
+ diffc is    1.22678280E-02
+ HIHIHI
+   17.0501671    
+ diffc is    6.13212585E-04
+ HIHIHI
+   17.0558128    
+ HIHIHI
+   17.0558128    
+ diffc is    1.35588646E-02
+ HIHIHI
+   17.0558128    
+ diffc is    6.77824020E-04
+ HIHIHI
+   17.0609970    
+ HIHIHI
+   17.0609970    
+ diffc is    1.49857998E-02
+ HIHIHI
+   17.0609970    
+ diffc is    7.49349594E-04
+ HIHIHI
+   17.0657692    
+ HIHIHI
+   17.0657692    
+ diffc is    1.65631771E-02
+ HIHIHI
+   17.0657692    
+ diffc is    8.28027725E-04
+ HIHIHI
+   17.0701733    
+ HIHIHI
+   17.0701733    
+ diffc is    1.83067322E-02
+ HIHIHI
+   17.0701733    
+ diffc is    9.15050507E-04
+ HIHIHI
+   17.0742493    
+ HIHIHI
+   17.0742493    
+ diffc is    2.02331543E-02
+ HIHIHI
+   17.0742493    
+ diffc is    1.01137161E-03
+ HIHIHI
+   17.0742493    
+ diffc is    5.05447388E-05
+ HIHIHI
+   17.0780258    
+ HIHIHI
+   17.0780258    
+ diffc is    2.23627090E-02
+ HIHIHI
+   17.0780258    
+ diffc is    1.11818314E-03
+ HIHIHI
+   17.0780258    
+ diffc is    5.57899475E-05
+ HIHIHI
+   17.0815411    
+ HIHIHI
+   17.0815411    
+ diffc is    2.47168541E-02
+ HIHIHI
+   17.0815411    
+ diffc is    1.23596191E-03
+ HIHIHI
+   17.0815411    
+ diffc is    6.19888306E-05
+ HIHIHI
+   17.0848198    
+ HIHIHI
+   17.0848198    
+ diffc is    2.73189545E-02
+ HIHIHI
+   17.0848198    
+ diffc is    1.36613846E-03
+ HIHIHI
+   17.0848198    
+ diffc is    6.81877136E-05
+ HIHIHI
+   17.0878830    
+ HIHIHI
+   17.0878830    
+ diffc is    3.01947594E-02
+ HIHIHI
+   17.0878830    
+ diffc is    1.50966644E-03
+ HIHIHI
+   17.0878830    
+ diffc is    7.53402710E-05
+ HIHIHI
+   17.0907574    
+ HIHIHI
+   17.0907574    
+ diffc is    3.33724022E-02
+ HIHIHI
+   17.0907574    
+ diffc is    1.66893005E-03
+ HIHIHI
+   17.0907574    
+ diffc is    8.34465027E-05
+ HIHIHI
+   17.0934505    
+ HIHIHI
+   17.0934505    
+ diffc is    3.68862152E-02
+ HIHIHI
+   17.0934505    
+ diffc is    1.84440613E-03
+ HIHIHI
+   17.0934505    
+ diffc is    9.15527344E-05
+ HIHIHI
+   17.0959816    
+ HIHIHI
+   17.0959816    
+ diffc is    4.07676697E-02
+ HIHIHI
+   17.0959816    
+ diffc is    2.03895569E-03
+ HIHIHI
+   17.0959816    
+ diffc is    1.02043152E-04
+ HIHIHI
+   17.0983639    
+ HIHIHI
+   17.0983639    
+ diffc is    4.50592041E-02
+ HIHIHI
+   17.0983639    
+ diffc is    2.25257874E-03
+ HIHIHI
+   17.0983639    
+ diffc is    1.13487244E-04
+ HIHIHI
+   17.1006012    
+ HIHIHI
+   17.1006012    
+ diffc is    4.98027802E-02
+ HIHIHI
+   17.1006012    
+ diffc is    2.49004364E-03
+ HIHIHI
+   17.1006012    
+ diffc is    1.23977661E-04
+ HIHIHI
+   17.1027107    
+ HIHIHI
+   17.1027107    
+ diffc is    5.50451279E-02
+ HIHIHI
+   17.1027107    
+ diffc is    2.75230408E-03
+ HIHIHI
+   17.1027107    
+ diffc is    1.37329102E-04
+ HIHIHI
+   17.1046886    
+ HIHIHI
+   17.1046886    
+ diffc is    6.08396530E-02
+ HIHIHI
+   17.1046886    
+ diffc is    3.04126740E-03
+ HIHIHI
+   17.1046886    
+ diffc is    1.52587891E-04
+ HIHIHI
+   17.1065540    
+ HIHIHI
+   17.1065540    
+ diffc is    6.72435760E-02
+ HIHIHI
+   17.1065540    
+ diffc is    3.36170197E-03
+ HIHIHI
+   17.1065540    
+ diffc is    1.67846680E-04
+ HIHIHI
+   17.1083069    
+ HIHIHI
+   17.1083069    
+ diffc is    7.43217468E-02
+ HIHIHI
+   17.1083069    
+ diffc is    3.71742249E-03
+ HIHIHI
+   17.1083069    
+ diffc is    1.85012817E-04
+ HIHIHI
+   17.1099472    
+ HIHIHI
+   17.1099472    
+ diffc is    8.21456909E-02
+ HIHIHI
+   17.1099472    
+ diffc is    4.10652161E-03
+ HIHIHI
+   17.1099472    
+ diffc is    2.05993652E-04
+ TIME=    4.00
+ HIHIHI
+   17.1114769    
+ HIHIHI
+   17.1114769    
+ diffc is    9.07917023E-02
+ HIHIHI
+   17.1114769    
+ diffc is    4.53948975E-03
+ HIHIHI
+   17.1114769    
+ diffc is    2.26974487E-04
+ HIHIHI
+   17.1129074    
+ HIHIHI
+   17.1129074    
+ diffc is   0.100347519    
+ HIHIHI
+   17.1129074    
+ diffc is    5.01823425E-03
+ HIHIHI
+   17.1129074    
+ diffc is    2.49862671E-04
+ HIHIHI
+   17.1142368    
+ HIHIHI
+   17.1142368    
+ diffc is   0.110912323    
+ HIHIHI
+   17.1142368    
+ diffc is    5.54466248E-03
+ HIHIHI
+   17.1142368    
+ diffc is    2.78472900E-04
+ HIHIHI
+   17.1154652    
+ HIHIHI
+   17.1154652    
+ diffc is   0.122585297    
+ HIHIHI
+   17.1154652    
+ diffc is    6.13021851E-03
+ HIHIHI
+   17.1154652    
+ diffc is    3.07083130E-04
+ HIHIHI
+   17.1165962    
+ HIHIHI
+   17.1165962    
+ diffc is   0.135490417    
+ HIHIHI
+   17.1165962    
+ diffc is    6.77299500E-03
+ HIHIHI
+   17.1165962    
+ diffc is    3.39508057E-04
+ HIHIHI
+   17.1176300    
+ HIHIHI
+   17.1176300    
+ diffc is   0.149753571    
+ HIHIHI
+   17.1176300    
+ diffc is    7.48825073E-03
+ HIHIHI
+   17.1176300    
+ diffc is    3.73840332E-04
+ HIHIHI
+   17.1185684    
+ HIHIHI
+   17.1185684    
+ diffc is   0.165515900    
+ HIHIHI
+   17.1185684    
+ diffc is    8.27407837E-03
+ HIHIHI
+   17.1185684    
+ diffc is    4.11987305E-04
+ HIHIHI
+   17.1194057    
+ HIHIHI
+   17.1194057    
+ diffc is   0.182937622    
+ HIHIHI
+   17.1194057    
+ diffc is    9.14764404E-03
+ HIHIHI
+   17.1194057    
+ diffc is    4.57763672E-04
+ HIHIHI
+   17.1201439    
+ HIHIHI
+   17.1201439    
+ diffc is   0.202194214    
+ HIHIHI
+   17.1201439    
+ diffc is    1.01089478E-02
+ HIHIHI
+   17.1201439    
+ diffc is    5.07354736E-04
+ HIHIHI
+   17.1207867    
+ HIHIHI
+   17.1207867    
+ diffc is   0.223476410    
+ HIHIHI
+   17.1207867    
+ diffc is    1.11732483E-02
+ HIHIHI
+   17.1207867    
+ diffc is    5.60760498E-04
+ HIHIHI
+   17.1213264    
+ HIHIHI
+   17.1213264    
+ diffc is   0.247001648    
+ HIHIHI
+   17.1213264    
+ diffc is    1.23481750E-02
+ HIHIHI
+   17.1213264    
+ diffc is    6.17980957E-04
+ HIHIHI
+   17.1217670    
+ HIHIHI
+   17.1217670    
+ diffc is   0.273002625    
+ HIHIHI
+   17.1217670    
+ diffc is    1.36489868E-02
+ HIHIHI
+   17.1217670    
+ diffc is    6.82830811E-04
+ HIHIHI
+   17.1221066    
+ HIHIHI
+   17.1221066    
+ diffc is   0.301742554    
+ HIHIHI
+   17.1221066    
+ diffc is    1.50833130E-02
+ HIHIHI
+   17.1221066    
+ diffc is    7.55310059E-04
+ HIHIHI
+   17.1223431    
+ HIHIHI
+   17.1223431    
+ diffc is   0.333496094    
+ HIHIHI
+   17.1223431    
+ diffc is    1.66778564E-02
+ HIHIHI
+   17.1223431    
+ diffc is    8.31604004E-04
+ HIHIHI
+   17.1224747    
+ HIHIHI
+   17.1224747    
+ diffc is   0.368606567    
+ HIHIHI
+   17.1224747    
+ diffc is    1.84249878E-02
+ HIHIHI
+   17.1224747    
+ diffc is    9.23156738E-04
+ HIHIHI
+   17.1225052    
+ HIHIHI
+   17.1225052    
+ diffc is   0.407402039    
+ HIHIHI
+   17.1225052    
+ diffc is    2.03704834E-02
+ HIHIHI
+   17.1225052    
+ diffc is    1.02233887E-03
+ HIHIHI
+   17.1225052    
+ diffc is    4.57763672E-05
+ HIHIHI
+   17.1224308    
+ HIHIHI
+   17.1224308    
+ diffc is   0.450286865    
+ HIHIHI
+   17.1224308    
+ diffc is    2.25143433E-02
+ HIHIHI
+   17.1224308    
+ diffc is    1.12915039E-03
+ HIHIHI
+   17.1224308    
+ diffc is    5.34057617E-05
+ HIHIHI
+   17.1222515    
+ HIHIHI
+   17.1222515    
+ diffc is   0.497695923    
+ HIHIHI
+   17.1222515    
+ diffc is    2.48794556E-02
+ HIHIHI
+   17.1222515    
+ diffc is    1.24359131E-03
+ HIHIHI
+   17.1222515    
+ diffc is    6.86645508E-05
+ HIHIHI
+   17.1219711    
+ HIHIHI
+   17.1219711    
+ diffc is   0.550079346    
+ HIHIHI
+   17.1219711    
+ diffc is    2.75039673E-02
+ HIHIHI
+   17.1219711    
+ diffc is    1.37329102E-03
+ HIHIHI
+   17.1219711    
+ diffc is    6.86645508E-05
+ HIHIHI
+   17.1215878    
+ HIHIHI
+   17.1215878    
+ diffc is   0.607986450    
+ HIHIHI
+   17.1215878    
+ diffc is    3.03955078E-02
+ HIHIHI
+   17.1215878    
+ diffc is    1.52587891E-03
+ HIHIHI
+   17.1215878    
+ diffc is    7.62939453E-05
+ TIME=    6.00
+ HIHIHI
+   17.1211033    
+ HIHIHI
+   17.1211033    
+ diffc is   0.671966553    
+ HIHIHI
+   17.1211033    
+ diffc is    3.35998535E-02
+ HIHIHI
+   17.1211033    
+ diffc is    1.67846680E-03
+ HIHIHI
+   17.1211033    
+ diffc is    9.15527344E-05
+ HIHIHI
+   17.1205177    
+ HIHIHI
+   17.1205177    
+ diffc is   0.742721558    
+ HIHIHI
+   17.1205177    
+ diffc is    3.71246338E-02
+ HIHIHI
+   17.1205177    
+ diffc is    1.86157227E-03
+ HIHIHI
+   17.1205177    
+ diffc is    9.15527344E-05
+ HIHIHI
+   17.1198368    
+ HIHIHI
+   17.1198368    
+ diffc is   0.820892334    
+ HIHIHI
+   17.1198368    
+ diffc is    4.10461426E-02
+ HIHIHI
+   17.1198368    
+ diffc is    2.04467773E-03
+ HIHIHI
+   17.1198368    
+ diffc is    1.06811523E-04
+ HIHIHI
+   17.1190605    
+ HIHIHI
+   17.1190605    
+ diffc is   0.907302856    
+ HIHIHI
+   17.1190605    
+ diffc is    4.53643799E-02
+ HIHIHI
+   17.1190605    
+ diffc is    2.27355957E-03
+ HIHIHI
+   17.1190605    
+ diffc is    1.06811523E-04
+ HIHIHI
+   17.1181927    
+ HIHIHI
+   17.1181927    
+ diffc is    1.00282288    
+ HIHIHI
+   17.1181927    
+ diffc is    5.01403809E-02
+ HIHIHI
+   17.1181927    
+ diffc is    2.50244141E-03
+ HIHIHI
+   17.1181927    
+ diffc is    1.22070312E-04
+ HIHIHI
+   17.1172352    
+ HIHIHI
+   17.1172352    
+ diffc is    1.10836792    
+ HIHIHI
+   17.1172352    
+ diffc is    5.54199219E-02
+ HIHIHI
+   17.1172352    
+ diffc is    2.76184082E-03
+ HIHIHI
+   17.1172352    
+ diffc is    1.37329102E-04
+ HIHIHI
+   17.1161919    
+ HIHIHI
+   17.1161919    
+ diffc is    1.22503662    
+ HIHIHI
+   17.1161919    
+ diffc is    6.12487793E-02
+ HIHIHI
+   17.1161919    
+ diffc is    3.05175781E-03
+ HIHIHI
+   17.1161919    
+ diffc is    1.83105469E-04
+ HIHIHI
+   17.1150665    
+ HIHIHI
+   17.1150665    
+ diffc is    1.35400391    
+ HIHIHI
+   17.1150665    
+ diffc is    6.76879883E-02
+ HIHIHI
+   17.1150665    
+ diffc is    3.38745117E-03
+ HIHIHI
+   17.1150665    
+ diffc is    1.83105469E-04
+ HIHIHI
+   17.1138649    
+ HIHIHI
+   17.1138649    
+ diffc is    1.49652100    
+ HIHIHI
+   17.1138649    
+ diffc is    7.47985840E-02
+ HIHIHI
+   17.1138649    
+ diffc is    3.75366211E-03
+ HIHIHI
+   17.1138649    
+ diffc is    1.83105469E-04
+ HIHIHI
+   17.1125851    
+ HIHIHI
+   17.1125851    
+ diffc is    1.65405273    
+ HIHIHI
+   17.1125851    
+ diffc is    8.27026367E-02
+ HIHIHI
+   17.1125851    
+ diffc is    4.15039062E-03
+ HIHIHI
+   17.1125851    
+ diffc is    1.83105469E-04
+ HIHIHI
+   17.1112366    
+ HIHIHI
+   17.1112366    
+ diffc is    1.82815552    
+ HIHIHI
+   17.1112366    
+ diffc is    9.14001465E-02
+ HIHIHI
+   17.1112366    
+ diffc is    4.57763672E-03
+ HIHIHI
+   17.1112366    
+ diffc is    2.44140625E-04
+ HIHIHI
+   17.1098232    
+ HIHIHI
+   17.1098232    
+ diffc is    2.02059937    
+ HIHIHI
+   17.1098232    
+ diffc is   0.101013184    
+ HIHIHI
+   17.1098232    
+ diffc is    5.06591797E-03
+ HIHIHI
+   17.1098232    
+ diffc is    2.44140625E-04
+ HIHIHI
+   17.1083431    
+ HIHIHI
+   17.1083431    
+ diffc is    2.23327637    
+ HIHIHI
+   17.1083431    
+ diffc is   0.111663818    
+ HIHIHI
+   17.1083431    
+ diffc is    5.58471680E-03
+ HIHIHI
+   17.1083431    
+ diffc is    2.74658203E-04
+ HIHIHI
+   17.1068096    
+ HIHIHI
+   17.1068096    
+ diffc is    2.46838379    
+ HIHIHI
+   17.1068096    
+ diffc is   0.123413086    
+ HIHIHI
+   17.1068096    
+ diffc is    6.16455078E-03
+ HIHIHI
+   17.1068096    
+ diffc is    3.05175781E-04
+ HIHIHI
+   17.1052227    
+ HIHIHI
+   17.1052227    
+ diffc is    2.72821045    
+ HIHIHI
+   17.1052227    
+ diffc is   0.136413574    
+ HIHIHI
+   17.1052227    
+ diffc is    6.77490234E-03
+ HIHIHI
+   17.1052227    
+ diffc is    3.66210938E-04
+ HIHIHI
+   17.1035824    
+ HIHIHI
+   17.1035824    
+ diffc is    3.01538086    
+ HIHIHI
+   17.1035824    
+ diffc is   0.150756836    
+ HIHIHI
+   17.1035824    
+ diffc is    7.50732422E-03
+ HIHIHI
+   17.1035824    
+ diffc is    3.66210938E-04
+ HIHIHI
+   17.1018906    
+ HIHIHI
+   17.1018906    
+ diffc is    3.33276367    
+ HIHIHI
+   17.1018906    
+ diffc is   0.166625977    
+ HIHIHI
+   17.1018906    
+ diffc is    8.36181641E-03
+ HIHIHI
+   17.1018906    
+ diffc is    4.27246094E-04
+ HIHIHI
+   17.1001606    
+ HIHIHI
+   17.1001606    
+ diffc is    3.68359375    
+ HIHIHI
+   17.1001606    
+ diffc is   0.184204102    
+ HIHIHI
+   17.1001606    
+ diffc is    9.21630859E-03
+ HIHIHI
+   17.1001606    
+ diffc is    4.27246094E-04
+ HIHIHI
+   17.0983906    
+ HIHIHI
+   17.0983906    
+ diffc is    4.07135010    
+ HIHIHI
+   17.0983906    
+ diffc is   0.203613281    
+ HIHIHI
+   17.0983906    
+ diffc is    1.01318359E-02
+ HIHIHI
+   17.0983906    
+ diffc is    5.49316406E-04
+ HIHIHI
+   17.0965843    
+ HIHIHI
+   17.0965843    
+ diffc is    4.49993896    
+ HIHIHI
+   17.0965843    
+ diffc is   0.224975586    
+ HIHIHI
+   17.0965843    
+ diffc is    1.12304688E-02
+ HIHIHI
+   17.0965843    
+ diffc is    5.49316406E-04
+ TIME=    8.00
+ HIHIHI
+   17.0947456    
+ HIHIHI
+   17.0947456    
+ diffc is    4.97363281    
+ HIHIHI
+   17.0947456    
+ diffc is   0.248657227    
+ HIHIHI
+   17.0947456    
+ diffc is    1.24511719E-02
+ HIHIHI
+   17.0947456    
+ diffc is    6.10351562E-04
+ HIHIHI
+   17.0928745    
+ HIHIHI
+   17.0928745    
+ diffc is    5.49707031    
+ HIHIHI
+   17.0928745    
+ diffc is   0.274902344    
+ HIHIHI
+   17.0928745    
+ diffc is    1.37939453E-02
+ HIHIHI
+   17.0928745    
+ diffc is    6.10351562E-04
+ HIHIHI
+   17.0909786    
+ HIHIHI
+   17.0909786    
+ diffc is    6.07580566    
+ HIHIHI
+   17.0909786    
+ diffc is   0.303710938    
+ HIHIHI
+   17.0909786    
+ diffc is    1.52587891E-02
+ HIHIHI
+   17.0909786    
+ diffc is    7.32421875E-04
+ HIHIHI
+   17.0890579    
+ HIHIHI
+   17.0890579    
+ diffc is    6.71533203    
+ HIHIHI
+   17.0890579    
+ diffc is   0.335693359    
+ HIHIHI
+   17.0890579    
+ diffc is    1.68457031E-02
+ HIHIHI
+   17.0890579    
+ diffc is    8.54492188E-04
+ HIHIHI
+   17.0871201    
+ HIHIHI
+   17.0871201    
+ diffc is    7.42224121    
+ HIHIHI
+   17.0871201    
+ diffc is   0.371093750    
+ HIHIHI
+   17.0871201    
+ diffc is    1.85546875E-02
+ HIHIHI
+   17.0871201    
+ diffc is    9.76562500E-04
+ HIHIHI
+   17.0876179    
+ HIHIHI
+   17.0876179    
+ diffc is    8.20349121    
+ HIHIHI
+   17.0876179    
+ diffc is   0.410156250    
+ HIHIHI
+   17.0876179    
+ diffc is    2.05078125E-02
+ HIHIHI
+   17.0876179    
+ diffc is    9.76562500E-04
+ HIHIHI
+   17.0879669    
+ HIHIHI
+   17.0879669    
+ diffc is    9.06701660    
+ HIHIHI
+   17.0879669    
+ diffc is   0.453247070    
+ HIHIHI
+   17.0879669    
+ diffc is    2.27050781E-02
+ HIHIHI
+   17.0879669    
+ diffc is    1.09863281E-03
+ HIHIHI
+   17.0879669    
+ diffc is    1.22070312E-04
+ HIHIHI
+   17.0881672    
+ HIHIHI
+   17.0881672    
+ diffc is    10.0212402    
+ HIHIHI
+   17.0881672    
+ diffc is   0.501220703    
+ HIHIHI
+   17.0881672    
+ diffc is    2.49023438E-02
+ HIHIHI
+   17.0881672    
+ diffc is    1.46484375E-03
+ HIHIHI
+   17.0881672    
+ diffc is    0.00000000    
+ HIHIHI
+   17.0882187    
+ HIHIHI
+   17.0882187    
+ diffc is    11.0764160    
+ HIHIHI
+   17.0882187    
+ diffc is   0.553710938    
+ HIHIHI
+   17.0882187    
+ diffc is    2.75878906E-02
+ HIHIHI
+   17.0882187    
+ diffc is    1.46484375E-03
+ HIHIHI
+   17.0882187    
+ diffc is    0.00000000    
+ HIHIHI
+   17.0881290    
+ HIHIHI
+   17.0881290    
+ diffc is    12.2421875    
+ HIHIHI
+   17.0881290    
+ diffc is   0.612060547    
+ HIHIHI
+   17.0881290    
+ diffc is    3.07617188E-02
+ HIHIHI
+   17.0881290    
+ diffc is    1.46484375E-03
+ HIHIHI
+   17.0881290    
+ diffc is    0.00000000    
+ HIHIHI
+   17.0878963    
+ HIHIHI
+   17.0878963    
+ diffc is    13.5307617    
+ HIHIHI
+   17.0878963    
+ diffc is   0.676513672    
+ HIHIHI
+   17.0878963    
+ diffc is    3.39355469E-02
+ HIHIHI
+   17.0878963    
+ diffc is    1.70898438E-03
+ HIHIHI
+   17.0878963    
+ diffc is    0.00000000    
+ HIHIHI
+   17.0875187    
+ HIHIHI
+   17.0875187    
+ diffc is    14.9550781    
+ HIHIHI
+   17.0875187    
+ diffc is   0.747802734    
+ HIHIHI
+   17.0875187    
+ diffc is    3.73535156E-02
+ HIHIHI
+   17.0875187    
+ diffc is    1.95312500E-03
+ HIHIHI
+   17.0875187    
+ diffc is    0.00000000    
+ HIHIHI
+   17.0870075    
+ HIHIHI
+   17.0870075    
+ diffc is    16.5292969    
+ HIHIHI
+   17.0870075    
+ diffc is   0.826660156    
+ HIHIHI
+   17.0870075    
+ diffc is    4.12597656E-02
+ HIHIHI
+   17.0870075    
+ diffc is    1.95312500E-03
+ HIHIHI
+   17.0870075    
+ diffc is    2.44140625E-04
+ HIHIHI
+   17.0863590    
+ HIHIHI
+   17.0863590    
+ diffc is    18.2692871    
+ HIHIHI
+   17.0863590    
+ diffc is   0.913574219    
+ HIHIHI
+   17.0863590    
+ diffc is    4.56542969E-02
+ HIHIHI
+   17.0863590    
+ diffc is    2.19726562E-03
+ HIHIHI
+   17.0863590    
+ diffc is    2.44140625E-04
+ HIHIHI
+   17.0855808    
+ HIHIHI
+   17.0855808    
+ diffc is    20.1923828    
+ HIHIHI
+   17.0855808    
+ diffc is    1.00976562    
+ HIHIHI
+   17.0855808    
+ diffc is    5.02929688E-02
+ HIHIHI
+   17.0855808    
+ diffc is    2.44140625E-03
+ HIHIHI
+   17.0855808    
+ diffc is    0.00000000    
+ HIHIHI
+   17.0846710    
+ HIHIHI
+   17.0846710    
+ diffc is    22.3178711    
+ HIHIHI
+   17.0846710    
+ diffc is    1.11621094    
+ HIHIHI
+   17.0846710    
+ diffc is    5.56640625E-02
+ HIHIHI
+   17.0846710    
+ diffc is    2.92968750E-03
+ HIHIHI
+   17.0846710    
+ diffc is    0.00000000    
+ HIHIHI
+   17.0836372    
+ HIHIHI
+   17.0836372    
+ diffc is    24.6674805    
+ HIHIHI
+   17.0836372    
+ diffc is    1.23339844    
+ HIHIHI
+   17.0836372    
+ diffc is    6.15234375E-02
+ HIHIHI
+   17.0836372    
+ diffc is    2.92968750E-03
+ HIHIHI
+   17.0836372    
+ diffc is    0.00000000    
+ HIHIHI
+   17.0824814    
+ HIHIHI
+   17.0824814    
+ diffc is    27.2636719    
+ HIHIHI
+   17.0824814    
+ diffc is    1.36328125    
+ HIHIHI
+   17.0824814    
+ diffc is    6.83593750E-02
+ HIHIHI
+   17.0824814    
+ diffc is    2.92968750E-03
+ HIHIHI
+   17.0824814    
+ diffc is    4.88281250E-04
+ HIHIHI
+   17.0812092    
+ HIHIHI
+   17.0812092    
+ diffc is    30.1337891    
+ HIHIHI
+   17.0812092    
+ diffc is    1.50634766    
+ HIHIHI
+   17.0812092    
+ diffc is    7.56835938E-02
+ HIHIHI
+   17.0812092    
+ diffc is    3.41796875E-03
+ HIHIHI
+   17.0812092    
+ diffc is    4.88281250E-04
+ HIHIHI
+   17.0798244    
+ HIHIHI
+   17.0798244    
+ diffc is    33.3056641    
+ HIHIHI
+   17.0798244    
+ diffc is    1.66503906    
+ HIHIHI
+   17.0798244    
+ diffc is    8.34960938E-02
+ HIHIHI
+   17.0798244    
+ diffc is    3.90625000E-03
+ HIHIHI
+   17.0798244    
+ diffc is    4.88281250E-04
+ TIME=   10.00
+ >>AVERAGE TIME PER ITERATION =  0.00000 SECONDS.
+ <<GENERATING OUTPUT FILES>>
+ >>NOTE - GRADIENT ENERGY WILL NOT BE SAVED
+ <<PROGRAM FINISHED>>
+ >>CALULATION TIME =  2.13333 MINUTES.

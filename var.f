@@ -12,12 +12,14 @@
       REAL :: TSTART,TFINISH,TRUN            !! SIMULATION START, FINISH AND RUN TIMES
       REAL :: FFTSTART,FFTFINISH,FFTRUN      !! FFT PLANNING START, FINISH AND RUN TIMES
       REAL :: BPQSTART,BPQFINISH,BPQRUN      !! BPQ START, FINISH AND RUN TIMES
-      REAL :: EVOSTART,EVOFINISH,EVOAVG      !! SIMULATION START, FINISH AND AVERAGE TIMES
+      REAL :: EVOSTART,EVOFINISH,EVOAVG      !! EVOLUTION START, FINISH AND AVERAGE TIMES
+      REAL :: DIFSTART,DIFFINISH,DIFAVG      !! CONCEVOLUTION START, FINISH AND AVERAGE TIMES
       INTEGER(C_INT) :: FFTP                 !! FFT PLAN TYPE
       INTEGER :: NOMP                        !! NO. OF OPENMP THREADS
       INTEGER :: OUTGE                       !! OUTPUT GRADIENT ENERGY (YES/NO)
       INTEGER :: OUTFE                       !! OUTPUT FAULT ENERGY (YES/NO)
       INTEGER :: OUTETAS                     !! OUTPUT ETAS (YES/NO)
+      INTEGER :: OUTCONC                     !! OUTPUT CONC (YES/NO)
       INTEGER :: INITBENCH                   !! BENCHMARK INITIALISATION SPEED
       INTEGER :: NX,NY,NZ                    !! SYSTEM CELL DIMENSIONS
       INTEGER :: NXYZ                        !! SYSTEM VOLUME
@@ -67,4 +69,29 @@
       CHARACTER(LEN=25) :: FILENAME      
 !      
       REAL,ALLOCATABLE :: DER(:,:,:,:,:,:)   !! FOR CALCULATING GRADIENT ENERGY
+!
+!
+! DEFINE COMMON VARIABLES FOR DIF.F
+      INTEGER :: ONDIFF                      !! INLCUDE DIFFUSION (1/0?)
+! VARIABLES
+      REAL,ALLOCATABLE :: CONC(:,:,:)        !! CONC VARIABLE, R-SPACE
+      REAL,ALLOCATABLE :: ONE(:,:,:), TWO(:,:,:), THREE(:,:,:) !!SEE NOTES
+      REAL,ALLOCATABLE :: GDIFF(:,:,:)
+      REAL,ALLOCATABLE :: C0(:,:,:)           !! position of chemical BFE curve
+      REAL,ALLOCATABLE :: CONCFE(:,:,:)
+      REAL,ALLOCATABLE :: ALPDG(:,:,:),FBENERGY(:,:,:), CONCGE(:,:,:)
+      REAL,ALLOCATABLE :: DELTAGSISF          !!difference in SISFE
+! PARAMETERS
+      REAL, PARAMETER :: CG = 0.02    !!equilibrium concentration Gamma
+      REAL, PARAMETER :: CGP = 0.3    !!equilibrium concentration GPrime
+      REAL, PARAMETER :: CS = 0.4    !!equilibrium concentration SISF
+      REAL, PARAMETER :: A1=0.5*(CS+CGP)     !!parameter for alpha...
+      REAL, PARAMETER :: A2=0.02            !!...function of conc
+      REAL, PARAMETER :: BETA1=1.0          !! BFE param
+      REAL, PARAMETER :: MG = 0.05      !!concTIME EVOLUTION CONSTANT...
+      REAL, PARAMETER :: EG = 1.0           !!gradient CONSTANT for conc
+      REAL, PARAMETER :: DDX=1          !!DELTA_X FOR CONC EVO
+      REAL, PARAMETER :: DELTA = 0.001     !!tolerance in conc evol
+      REAL, PARAMETER :: IRAND = 0.005     !!initial randomisation
+!      
       END MODULE VAR

@@ -118,6 +118,40 @@
         GC(PHID,13) =-47.63139720814412
         GC(PHID,14) = 5.220084679281477
         GC(PHID,15) = 0.0          
+      ELSE IF(GSURF(PHID) == 23) THEN !! SINGLE LAYER HH - 100mJ SISF 
+        GSF_EQ(PHID)=12
+        GC(PHID,1)  =848.983953007 
+        GC(PHID,2)  =-51.9615242271
+        GC(PHID,3)  =-6.5448575604
+        GC(PHID,4)  =-195.685904553
+        GC(PHID,5)  =-2.3525712198
+        GC(PHID,6)  =-4.28847577293
+        GC(PHID,7)  =-29.9390954469
+        GC(PHID,8)  =10.1303489976
+        GC(PHID,9)  = 0.0
+        GC(PHID,10) =70.0
+        GC(PHID,11) =-338.8342993
+        GC(PHID,12) =-4.68911086754
+        GC(PHID,13) =-5.0
+        GC(PHID,14) =-18.4048999
+        GC(PHID,15) =0.0
+      ELSE IF(GSURF(PHID) == 24) THEN !! SINGLE LAYER HH - 50mJ SISF
+        GSF_EQ(PHID)=12
+        GC(PHID,1)  =851.067286341
+        GC(PHID,2)  =-51.9615242271
+        GC(PHID,3)  =-10.7115242271
+        GC(PHID,4)  =-193.60257122
+        GC(PHID,5)  =-0.269237886467
+        GC(PHID,6)  =-4.28847577293
+        GC(PHID,7)  =-32.0224287802
+        GC(PHID,8)  =9.43590455313
+        GC(PHID,9)  =0.0
+        GC(PHID,10) =70.0
+        GC(PHID,11) =-342.442738483
+        GC(PHID,12) =-1.08067168511
+        GC(PHID,13) =-5.0
+        GC(PHID,14) =-19.6077129609
+        GC(PHID,15) = 0.0
       ELSE
         STOP '>>ERROR - INVALID GSF FOR GAMMA PRIME PHASE!'
       END IF

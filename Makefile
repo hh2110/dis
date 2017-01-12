@@ -1,5 +1,6 @@
 OBJS  = dis.o        \
 	var.o        \
+	dif.o        \
 	evo.o        \
 	grd.o        \
 	ini.o        \
@@ -26,6 +27,8 @@ var.o:   var.f
 dis.o:   var.mod dis.f
 	 ${FC} -c dis.f -fopenmp -ffree-form 
 
+dif.o:   var.mod dif.f
+	 ${FC} -c dif.f -fopenmp  
 evo.o:   var.mod evo.f
 	 ${FC} -c evo.f -fopenmp  
 grd.o:   var.mod grd.f

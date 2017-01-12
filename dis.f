@@ -83,9 +83,24 @@
         EVOSTART=OMP_GET_WTIME()         
         DO STEPNO=0,NSTEPS      
           CALL EVO(STEPNO)
+!
+          IF(ONDIFF == 0) THEN
+          ELSE IF (ONDIFF == 1) THEN
+            CALL DIF(STEPNO)
+          ELSE
+            STOP '>>ERROR - INVALID ONDIFF IN PAR.INP - ENTER 0-NO OR 1-YES'
+          END IF
 !          
           IF(ICOUNT >= SFREQ .AND. OUT1 /= 0) THEN
             PRINT '(" TIME=",F8.2)',STEPNO*DT        
+!
+            IF(OUTCONC == 0) THEN
+            ELSE IF (OUTCONC == 1) THEN
+              CALL OCE(STEPNO)
+            ELSE
+              STOP '>>ERROR - INVALID OUTCONC IN PAR.INP - ENTER 0-NO or 1-YES'
+            END IF
+!
             IF(OUTGE == 0) THEN
             ELSE IF (OUTGE == 1) THEN
               CALL OGE(STEPNO)
