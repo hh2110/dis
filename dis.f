@@ -98,7 +98,7 @@
                  1-YES'
           END IF
 !          
-          IF(ICOUNT >= SFREQ .AND. OUT1 /= 0) THEN
+          IF( (STEPNO==0) .OR. (ICOUNT >= SFREQ .AND. OUT1 /= 0) ) THEN
             PRINT '(" TIME=",F8.2)',STEPNO*DT        
 !
             IF(OUTCONC == 0) THEN

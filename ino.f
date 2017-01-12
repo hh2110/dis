@@ -9,7 +9,9 @@
 ! READ PARAMETER VALUES FROM EXTERNAL INPUT FILE (par.inp)
       OPEN(UNIT=11, FILE='par.inp', STATUS='UNKNOWN')
       READ(11,100) FFTP,NOMP,OUTGE,OUTFE,OUTETAS,OUTCONC,INITBENCH,
-     &         NX,NY,NZ,BORDER,T0,DT,OUT1,OUTDIM,SLICE_AXIS,SLICE_POS,
+     &         NX,NY,NZ,BORDERSTARTX,BORDERENDX,BORDERSTARTY,
+     &         BORDERENDY,BORDERSTARTZ,BORDERENDZ,
+     &         T0,DT,OUT1,OUTDIM,SLICE_AXIS,SLICE_POS,
      &         AA,C11X,C12X,C44X,DXD,S_APP_MAG,
      &         S11,S12,S13,S21,S22,S23,S31,S32,S33,
      &         BETA,NSS,ROTFLAG,AXX(1),AXX(2),AXX(3),
@@ -28,6 +30,11 @@
      &       19X, I4/,
      &       19X, I4/,
      &       19X, I4/,
+     &       19X, I3/,
+     &       19X, I3/,
+     &       19X, I3/,
+     &       19X, I3/,
+     &       19X, I3/,
      &       19X, I3/,
      &       19X, F6.2/,
      &       19X, F6.5/,
@@ -82,7 +89,12 @@
       PRINT '(" SYSTEM SIZE X     =",I8)', NX
       PRINT '(" SYSTEM SIZE Y     =",I8)', NY
       PRINT '(" SYSTEM SIZE Z     =",I8)', NZ
-      PRINT '(" BORDER            =",I8)', BORDER
+      PRINT '(" BORDERSTARTX      =",I8)', BORDERSTARTX
+      PRINT '(" BORDERENDX        =",I8)', BORDERENDX
+      PRINT '(" BORDERSTARTY      =",I8)', BORDERSTARTY
+      PRINT '(" BORDERENDY        =",I8)', BORDERENDY
+      PRINT '(" BORDERSTARTZ      =",I8)', BORDERSTARTZ
+      PRINT '(" BORDERENDZ        =",I8)', BORDERENDZ
       PRINT '(" TOTAL TIME        =",F8.2)',T0
       PRINT '(" TIME STEP         =",F8.5)',DT
       PRINT '(" NUMBER OF OUTPUTS =",I8)',OUT1
@@ -159,7 +171,7 @@
 !-----------------------------------------------------------------------
       END SUBROUTINE PAR
 !-----------------------------------------------------------------------
-! SUBROUTINE TO OUTPUT GRADIENT ENERGY
+! SUBROUTINE TO OUTPUT CONC RELATED VARIABLES
 !-----------------------------------------------------------------------
       SUBROUTINE OCE(STEPID)
       USE VAR 

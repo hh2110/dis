@@ -256,7 +256,6 @@
      &          5*COS(5*(-E1+E3)*PI)))     
           ELSE IF(GSF_EQ(PHID) == 12 .AND. ONDIFF == 1) THEN
               ALPHAF=0.5+(0.5*TANH((A1-CON)/A2))
-              OMALPHAF=0.5-(0.5*TANH((A1-CON)/A2))
               DFDETA(IX,IY,IZ)=DFDETA(IX,IY,IZ)+
      &          (    !3
      &          (PI* !2
@@ -326,9 +325,9 @@
 ! BEGIN SYSTEM EVOLUTION
 !
 !$OMP PARALLEL DO PRIVATE(IY,IX) 
-        DO IZ=1+BORDER,NZ-BORDER
-        DO IY=1+BORDER,NY-BORDER
-        DO IX=1+BORDER,NX-BORDER
+        DO IZ=1+BORDERSTARTZ,NZ-BORDERENDZ
+        DO IY=1+BORDERSTARTY,NY-BORDERENDY
+        DO IX=1+BORDERSTARTX,NX-BORDERENDX
           ETA(SA,SMA,IX,IY,IZ)=ETA(SA,SMA,IX,IY,IZ) 
      &      -DT*DFDETA(IX,IY,IZ)
         END DO
