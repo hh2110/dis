@@ -15,7 +15,6 @@
       INTEGER :: IX,IY,IZ             !! POSITION INDICES
       INTEGER :: I,J                  !! DUMMY INDICES FOR IJK DIRECTIONS
       REAL :: E1,E2,E3,CON            !! TEMPORARY ETAS & CONC FOR GSF CALC.
-      REAL :: ALPHAF, OMALPHAF        !! ALPHA and 1-ALPHA 4 GS
 ! UPDATE ETA IN K-SPACE
       DO SA=1,NP
       DO SMA=1,NQ
@@ -255,61 +254,65 @@
      &        GC(PHID,14)*(5*COS(5*(E1-E2)*PI)-
      &          5*COS(5*(-E1+E3)*PI)))     
           ELSE IF(GSF_EQ(PHID) == 12 .AND. ONDIFF == 1) THEN
-              ALPHAF=0.5+(0.5*TANH((A1-CON)/A2))
-              OMALPHAF=0.5-(0.5*TANH((A1-CON)/A2))
               DFDETA(IX,IY,IZ)=DFDETA(IX,IY,IZ)+
-     &          (    !3
-     &          (PI* !2
-     &          (    !1 
-     &          -((ALPHAF*GC(2,2))+((1-ALPHAF)*GC(3,2)))*
-     &                   (  SIN(PI*(E1-E2))+
-     &                      SIN(PI*(E1-E3)))
-     &          -((ALPHAF*GC(2,3))+((1-ALPHAF)*GC(3,3)))*
-     &                   (2*SIN(PI*(2*E1-E2-E3))+
-     &                      SIN(PI*(E1-2*E2+E3))+
-     &                      SIN(PI*(E1+E2-2*E3)))
-     &          -((ALPHAF*GC(2,4))+((1-ALPHAF)*GC(3,4)))*
-     &                   (2*SIN(TWOPI*(E1-E2))+
-     &                    2*SIN(TWOPI*(E1-E3)) )
-     &          -((ALPHAF*GC(2,5))+((1-ALPHAF)*GC(3,5)))*
-     &                   (2*SIN(PI*(2*E1-3*E2+E3))+
-     &                    3*SIN(PI*(3*E1-2*E2-E3))+
-     &                    2*SIN(PI*(2*E1+E2-3*E3))+
-     &                      SIN(PI*(E1+2*E2-3*E3))+
-     &                    3*SIN(PI*(3*E1-E2-2*E3))+
-     &                      SIN(PI*(E1-3*E2+2*E3)))
-     &          -((ALPHAF*GC(2,6))+((1-ALPHAF)*GC(3,6)))*
-     &                   (3*SIN(3*PI*(E1-E2))+
-     &                    3*SIN(3*PI*(E1-E3)))
-     &          -((ALPHAF*GC(2,7))+((1-ALPHAF)*GC(3,7)))*
-     &                   (4*SIN(TWOPI*(2*E1-E2-E3))+
-     &                    2*SIN(TWOPI*(E1-2*E2+E3)) +
-     &                    2*SIN(TWOPI*(E1+E2-2*E3)))
-     &          -((ALPHAF*GC(2,8))+((1-ALPHAF)*GC(3,8)))*
-     &                   (4*SIN(4*PI*(E1-E2))+
-     &                    4*SIN(4*PI*(E1-E3)))
-     &          +((ALPHAF*GC(2,10))+((1-ALPHAF)*GC(3,10)))*
-     &                    (  COS(PI*(E1-E2))-
-     &                       COS(PI*(E1-E3)))
-     &          +((ALPHAF*GC(2,11))+((1-ALPHAF)*GC(3,11)))*
-     &                    (2*COS(TWOPI*(E1-E2))-
-     &                     2*COS(TWOPI*(E1-E3)))
-     &          +((ALPHAF*GC(2,12))+((1-ALPHAF)*GC(3,12)))*
-     &                    (2*COS(PI*(2*E1-3*E2+E3))+
-     &                     3*COS(PI*(3*E1-2*E2-E3))-
-     &                     2*COS(PI*(2*E1+E2-3*E3))+
-     &                       COS(PI*(E1+2*E2-3*E3))-
-     &                     3*COS(PI*(3*E1-E2-2*E3))-
-     &                       COS(PI*(E1-3*E2+2*E3)))
-     &          +((ALPHAF*GC(2,13))+((1-ALPHAF)*GC(3,13)))*
-     &                    (3*COS(3*PI*(E1-E2))-
-     &                     3*COS(3*PI*(E1-E3)))
-     &          +((ALPHAF*GC(2,14))+((1-ALPHAF)*GC(3,14)))*
-     &                    (4*COS(4*PI*(E1-E2))-
-     &                     4*COS(4*PI*(E1-E3)))
-     &          )  !1
-     &          )  !2 
-     &          ) !3
+     &          (((0.5+(0.5*TANH((A1-CON)/A2)))*
+     &          (PI*(
+     &          -GC(2,2)*(SIN(PI*(E1-E2))+SIN(PI*(E1-E3)))
+     &          -GC(2,3)*(2*SIN(PI*(2*E1-E2-E3))+
+     &            SIN(PI*(E1-2*E2+E3)) +
+     &            SIN(PI*(E1+E2-2*E3)))
+     &          -GC(2,4)*(2*SIN(TWOPI*(E1-E2))+
+     &            2*SIN(TWOPI*(E1-E3)) )
+     &          -GC(2,5)*(2*SIN(PI*(2*E1-3*E2+E3))+
+     &            3*SIN(PI*(3*E1-2*E2-E3))+
+     &            2*SIN(PI*(2*E1+E2-3*E3))+
+     &            SIN(PI*(E1+2*E2-3*E3))+
+     &            3*SIN(PI*(3*E1-E2-2*E3))+
+     &            SIN(PI*(E1-3*E2+2*E3)))
+     &          -GC(2,6)*(3*SIN(3*PI*(E1-E2))+3*SIN(3*PI*(E1-E3)))
+     &          -GC(2,7)*(4*SIN(TWOPI*(2*E1-E2-E3))+
+     &            2*SIN(TWOPI*(E1-2*E2+E3)) +
+     &            2*SIN(TWOPI*(E1+E2-2*E3)))
+     &          -GC(2,8)*(4*SIN(4*PI*(E1-E2))+4*SIN(4*PI*(E1-E3)))
+     &          +GC(2,10)*(COS(PI*(E1-E2))-COS(PI*(E1-E3)))
+     &          +GC(2,11)*(2*COS(TWOPI*(E1-E2))-2*COS(TWOPI*(E1-E3)))
+     &          +GC(2,12)*(2*COS(PI*(2*E1-3*E2+E3))+
+     &            3*COS(PI*(3*E1-2*E2-E3))-
+     &            2*COS(PI*(2*E1+E2-3*E3))+
+     &            COS(PI*(E1+2*E2-3*E3))-
+     &            3*COS(PI*(3*E1-E2-2*E3))-
+     &            COS(PI*(E1-3*E2+2*E3)))
+     &          +GC(2,13)*(3*COS(3*PI*(E1-E2))-3*COS(3*PI*(E1-E3)))
+     &          +GC(2,14)*(4*COS(4*PI*(E1-E2))-4*COS(4*PI*(E1-E3))))))+
+     &         ((1-0.5-(0.5*TANH((A1-CON)/A2)))*
+     &         (PI*(
+     &          -GC(3,2)*(SIN(PI*(E1-E2))+SIN(PI*(E1-E3)))
+     &          -GC(3,3)*(2*SIN(PI*(2*E1-E2-E3))+
+     &            SIN(PI*(E1-2*E2+E3)) +
+     &            SIN(PI*(E1+E2-2*E3)))
+     &          -GC(3,4)*(2*SIN(TWOPI*(E1-E2))+
+     &            2*SIN(TWOPI*(E1-E3)) )
+     &          -GC(3,5)*(2*SIN(PI*(2*E1-3*E2+E3))+
+     &            3*SIN(PI*(3*E1-2*E2-E3))+
+     &            2*SIN(PI*(2*E1+E2-3*E3))+
+     &            SIN(PI*(E1+2*E2-3*E3))+
+     &            3*SIN(PI*(3*E1-E2-2*E3))+
+     &            SIN(PI*(E1-3*E2+2*E3)))
+     &          -GC(3,6)*(3*SIN(3*PI*(E1-E2))+3*SIN(3*PI*(E1-E3)))
+     &          -GC(3,7)*(4*SIN(TWOPI*(2*E1-E2-E3))+
+     &            2*SIN(TWOPI*(E1-2*E2+E3)) +
+     &            2*SIN(TWOPI*(E1+E2-2*E3)))
+     &          -GC(3,8)*(4*SIN(4*PI*(E1-E2))+4*SIN(4*PI*(E1-E3)))
+     &          +GC(3,10)*(COS(PI*(E1-E2))-COS(PI*(E1-E3)))
+     &          +GC(3,11)*(2*COS(TWOPI*(E1-E2))-2*COS(TWOPI*(E1-E3)))
+     &          +GC(3,12)*(2*COS(PI*(2*E1-3*E2+E3))+
+     &            3*COS(PI*(3*E1-2*E2-E3))-
+     &            2*COS(PI*(2*E1+E2-3*E3))+
+     &            COS(PI*(E1+2*E2-3*E3))-
+     &            3*COS(PI*(3*E1-E2-2*E3))-
+     &            COS(PI*(E1-3*E2+2*E3)))
+     &          +GC(3,13)*(3*COS(3*PI*(E1-E2))-3*COS(3*PI*(E1-E3)))
+     &          +GC(3,14)*(4*COS(4*PI*(E1-E2))-4*COS(4*PI*(E1-E3)))))))
           END IF
 ! INTRODUCE WORK COMPONENT DONE BY APPLIED STRESS
           DO J=1,3

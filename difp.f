@@ -138,7 +138,7 @@
 !      CALL CPU_TIME(TE0)
       TE0=OMP_GET_WTIME()
 ! FINISHED
-!      WRITE(1011,*) TE0-TS0,TE1-TS1,TE2-TS2,TE3-TS3,TE4-TS4,TE5-TS5
+      WRITE(1011,*) TE0-TS0,TE1-TS1,TE2-TS2,TE3-TS3,TE4-TS4,TE5-TS5
       RETURN
       END FUNCTION 
 !-----------------------------------------------------------------------
@@ -158,47 +158,65 @@
         E1=EM1(IX,IY,IZ)
         E2=EM2(IX,IY,IZ)
         E3=EM3(IX,IY,IZ)
-        CALCGD(IX,IY,IZ)= PHI(IX,IY,IZ)*(
-     &        (GC(2,1)-GC(3,1))+
-     &        (GC(2,2)-GC(3,2))*(COS(PI*(E1-E2))+
-     &          COS(PI*(E2-E3))+
-     &          COS(PI*(E3-E1)))+
-     &        (GC(2,3)-GC(3,3))*(COS(PI*(2*E1-E2-E3))+
+        CALCGD(IX,IY,IZ)= PHI(IX,IY,IZ)*(-(GC(3,1)+
+     &        GC(3,2)*(COS(PI*(E1-E2))+COS(PI*(E2-E3))+
+     &          COS(PI*(E3-E1))) +
+     &        GC(3,3)*(COS(PI*(2*E1-E2-E3))+
      &          COS(PI*(2*E2-E3-E1))+
      &          COS(PI*(2*E3-E1-E2))) +
-     &        (GC(2,4)-GC(3,4))*(COS(TWOPI*(E1-E2))+
-     &          COS(TWOPI*(E2-E3))+
+     &        GC(3,4)*(COS(TWOPI*(E1-E2))+COS(TWOPI*(E2-E3))+
      &          COS(TWOPI*(E3-E1))) +
-     &        (GC(2,5)-GC(3,5))*(
-     &          COS(PI*(3*E1-E2-2*E3))+COS(PI*(3*E1-2*E2-E3))+
+     &        GC(3,5)*(COS(PI*(3*E1-E2-2*E3))+COS(PI*(3*E1-2*E2-E3))+
      &          COS(PI*(3*E2-E3-2*E1))+COS(PI*(3*E2-2*E3-E1))+
      &          COS(PI*(3*E3-E1-2*E2))+COS(PI*(3*E3-2*E1-E2)))+
-     &        (GC(2,6)-GC(3,6))*(COS(3*PI*(E1-E2))+
-     &          COS(3*PI*(E2-E3))+
+     &        GC(3,6)*(COS(3*PI*(E1-E2))+COS(3*PI*(E2-E3))+
      &          COS(3*PI*(E3-E1))) +
-     &        (GC(2,7)-GC(3,7))*(COS(TWOPI*(2*E1-E2-E3))+
+     &        GC(3,7)*(COS(TWOPI*(2*E1-E2-E3))+
      &          COS(TWOPI*(2*E2-E3-E1))+
      &          COS(TWOPI*(2*E3-E1-E2))) +
-     &        (GC(2,8)-GC(3,8))*(COS(4*PI*(E1-E2))+
-     &          COS(4*PI*(E2-E3))+
+     &        GC(3,8)*(COS(4*PI*(E1-E2))+COS(4*PI*(E2-E3))+
      &          COS(4*PI*(E3-E1))) +
-     &        (GC(2,10)-GC(3,10))*(SIN(PI*(E1-E2))+
-     &          SIN(PI*(E2-E3))+
+     &        GC(3,10)*(SIN(PI*(E1-E2))+SIN(PI*(E2-E3))+
      &          SIN(PI*(E3-E1))) +
-     &        (GC(2,11)-GC(3,11))*(SIN(TWOPI*(E1-E2))+
-     &          SIN(TWOPI*(E2-E3))+
+     &        GC(3,11)*(SIN(TWOPI*(E1-E2))+SIN(TWOPI*(E2-E3))+
      &          SIN(TWOPI*(E3-E1))) +
-     &        (GC(2,12)-GC(3,12))*(
-     &          SIN(PI*(2*E1-3*E2+E3))+SIN(PI*(3*E1-2*E2-E3))+
+     &        GC(3,12)*(SIN(PI*(2*E1-3*E2+E3))+SIN(PI*(3*E1-2*E2-E3))+
      &          SIN(PI*(-2*E1-E2+3*E3))+SIN(PI*(E1+2*E2-3*E3))+
      &          SIN(PI*(-3*E1+E2+2*E3))+SIN(PI*(-E1+3*E2-2*E3)))+
-     &        (GC(2,13)-GC(3,13))*(SIN(3*PI*(E1-E2))+
-     &          SIN(3*PI*(E2-E3))+
+     &        GC(3,13)*(SIN(3*PI*(E1-E2))+SIN(3*PI*(E2-E3))+
      &          SIN(3*PI*(E3-E1)))+
-     &        (GC(2,14)-GC(3,14))*(SIN(4*PI*(E1-E2))+
-     &          SIN(4*PI*(E2-E3))+
-     &          SIN(4*PI*(E3-E1)))
-     &        )
+     &        GC(3,14)*(SIN(4*PI*(E1-E2))+SIN(4*PI*(E2-E3))+
+     &          SIN(4*PI*(E3-E1))))
+     &        +
+     &        (GC(2,1)+
+     &        GC(2,2)*(COS(PI*(E1-E2))+COS(PI*(E2-E3))+
+     &          COS(PI*(E3-E1))) +
+     &        GC(2,3)*(COS(PI*(2*E1-E2-E3))+
+     &          COS(PI*(2*E2-E3-E1))+
+     &          COS(PI*(2*E3-E1-E2))) +
+     &        GC(2,4)*(COS(TWOPI*(E1-E2))+COS(TWOPI*(E2-E3))+
+     &          COS(TWOPI*(E3-E1))) +
+     &        GC(2,5)*(COS(PI*(3*E1-E2-2*E3))+COS(PI*(3*E1-2*E2-E3))+
+     &          COS(PI*(3*E2-E3-2*E1))+COS(PI*(3*E2-2*E3-E1))+
+     &          COS(PI*(3*E3-E1-2*E2))+COS(PI*(3*E3-2*E1-E2)))+
+     &        GC(2,6)*(COS(3*PI*(E1-E2))+COS(3*PI*(E2-E3))+
+     &          COS(3*PI*(E3-E1))) +
+     &        GC(2,7)*(COS(TWOPI*(2*E1-E2-E3))+
+     &          COS(TWOPI*(2*E2-E3-E1))+
+     &          COS(TWOPI*(2*E3-E1-E2))) +
+     &        GC(2,8)*(COS(4*PI*(E1-E2))+COS(4*PI*(E2-E3))+
+     &          COS(4*PI*(E3-E1))) +
+     &        GC(2,10)*(SIN(PI*(E1-E2))+SIN(PI*(E2-E3))+
+     &          SIN(PI*(E3-E1))) +
+     &        GC(2,11)*(SIN(TWOPI*(E1-E2))+SIN(TWOPI*(E2-E3))+
+     &          SIN(TWOPI*(E3-E1))) +
+     &        GC(2,12)*(SIN(PI*(2*E1-3*E2+E3))+SIN(PI*(3*E1-2*E2-E3))+
+     &          SIN(PI*(-2*E1-E2+3*E3))+SIN(PI*(E1+2*E2-3*E3))+
+     &          SIN(PI*(-3*E1+E2+2*E3))+SIN(PI*(-E1+3*E2-2*E3)))+
+     &        GC(2,13)*(SIN(3*PI*(E1-E2))+SIN(3*PI*(E2-E3))+
+     &          SIN(3*PI*(E3-E1)))+
+     &        GC(2,14)*(SIN(4*PI*(E1-E2))+SIN(4*PI*(E2-E3))+
+     &          SIN(4*PI*(E3-E1)))))
       END DO
       END DO
       END DO

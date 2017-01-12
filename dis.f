@@ -7,6 +7,8 @@
       INTEGER :: SFREQ              !! OUTPUT SAMPLING FREQUENCY
       INTEGER :: ICOUNT             !! ITERATION COUNTER
       INTEGER :: IX,IY,IZ           !! POSITION VECTOR INDICES
+      REAL :: TS0, TS1, TS2, TS3, TS4, TS5
+      REAL :: TE0, TE1, TE2, TE3, TE4, TE5
 ! SET UP OPENMP STUFF     
       REAL(KIND=8) :: OMP_GET_WTIME !! OMP TIMER
 ! LOG THE SIMULATION START TIME      
@@ -21,11 +23,14 @@
       PRINT *, 'DISLOCATION INTERACTION SIMILATOR'
       PRINT *, 'VERSION 1.0 BETA'
       PRINT *, ''      
-      PRINT *, 'BASED ON THE ORIGINAL PHASE FIELD MODEL BY DR. CHEN SHEN and PROF. YUNZHI WANG'
-      PRINT *, 'IMPLEMENTING THE KHACHATURYAN-SHATALOV ELASTIC INCLUSION THEORY'
+      PRINT *, 'BASED ON THE ORIGINAL PHASE FIELD MODEL BY DR. CHEN    &
+                SHEN and PROF. YUNZHI WANG'
+      PRINT *, 'IMPLEMENTING THE KHACHATURYAN-SHATALOV ELASTIC         &
+                INCLUSION THEORY'
       PRINT *, ''      
       PRINT *, 'CREATED BY: VASSILI VORONTSOV and HIKMATYAR HASAN'
-      PRINT *, 'EMAIL QUESTIONS, BUG REPORTS AND SUGGESTIONS TO: vassili.vorontsov@gmail.com'      
+      PRINT *, 'EMAIL QUESTIONS, BUG REPORTS AND SUGGESTIONS TO:       &
+                vassili.vorontsov@gmail.com'      
       PRINT *, ''      
       PRINT *, '<<BEGINNING RUN>>'
       PRINT *, ''        
@@ -81,6 +86,7 @@
         ICOUNT =0
 !        
         EVOSTART=OMP_GET_WTIME()         
+        WRITE(1011,*) EVOSTART
         DO STEPNO=0,NSTEPS      
           CALL EVO(STEPNO)
 !
@@ -88,7 +94,8 @@
           ELSE IF (ONDIFF == 1) THEN
             CALL DIF(STEPNO)
           ELSE
-            STOP '>>ERROR - INVALID ONDIFF IN PAR.INP - ENTER 0-NO OR 1-YES'
+            STOP '>>ERROR - INVALID ONDIFF IN PAR.INP - ENTER 0-NO OR  &
+                 1-YES'
           END IF
 !          
           IF(ICOUNT >= SFREQ .AND. OUT1 /= 0) THEN
@@ -98,28 +105,32 @@
             ELSE IF (OUTCONC == 1) THEN
               CALL OCE(STEPNO)
             ELSE
-              STOP '>>ERROR - INVALID OUTCONC IN PAR.INP - ENTER 0-NO or 1-YES'
+              STOP '>>ERROR - INVALID OUTCONC IN PAR.INP - ENTER 0-NO  &
+                   or 1-YES'
             END IF
 !
             IF(OUTGE == 0) THEN
             ELSE IF (OUTGE == 1) THEN
               CALL OGE(STEPNO)
             ELSE
-              STOP '>>ERROR - INVALID OUTGE IN PAR.INP - ENTER 0-NO or 1-YES'
+              STOP '>>ERROR - INVALID OUTGE IN PAR.INP - ENTER 0-NO or &
+                    1-YES'
             END IF
 !        
             IF(OUTFE == 0) THEN
             ELSE IF (OUTFE == 1) THEN
               CALL OFE(STEPNO)
             ELSE
-              STOP '>>ERROR - INVALID OUTFE IN PAR.INP - ENTER 0-NO or 1-YES'
+              STOP '>>ERROR - INVALID OUTFE IN PAR.INP - ENTER 0-NO or &
+                    1-YES'
             END IF
 !        
             IF(OUTETAS == 0) THEN
             ELSE IF (OUTETAS == 1) THEN
               CALL OET(STEPNO)
             ELSE
-              STOP '>>ERROR - INVALID OUTETAS IN PAR.INP - ENTER 0-NO or 1-YES'
+              STOP '>>ERROR - INVALID OUTETAS IN PAR.INP - ENTER 0-NO  &
+                    or 1-YES'
             END IF         
             ICOUNT =1
           ELSE
@@ -129,12 +140,16 @@
 !        
         EVOFINISH=OMP_GET_WTIME()
         EVOAVG=(EVOFINISH-EVOSTART)/(NSTEPS+1)
+        print *, EVOFINISH-EVOSTART
         IF(EVOAVG < 60.0) THEN
-          PRINT '(" >>AVERAGE TIME PER ITERATION = ",F8.5," SECONDS.")',EVOAVG
+          PRINT '(" >>AVERAGE TIME PER ITERATION = ",F8.5," SECONDS.")'&
+                ,EVOAVG
         ELSE IF(EVOAVG >= 60.0 .AND. EVOAVG<3600.0) THEN
-          PRINT '(" >>AVERAGE TIME PER ITERATION = ",F8.5," MINUTES.")',EVOAVG/60.0
+          PRINT '(" >>AVERAGE TIME PER ITERATION = ",F8.5," MINUTES.")'&
+                ,EVOAVG/60.0
         ELSE IF(EVOAVG>=3600.0) THEN
-          PRINT '(" >>AVERAGE TIME PER ITERATION = ",ES14.5," HOURS.")',EVOAVG/3600.0
+          PRINT '(" >>AVERAGE TIME PER ITERATION = ",ES14.5," HOURS.")'&
+                ,EVOAVG/3600.0
         END IF
 !          
         PRINT *, '<<GENERATING OUTPUT FILES>>'
@@ -153,8 +168,10 @@
       IF(TRUN < 60.0) THEN
       PRINT '(" >>CALULATION TIME = ",F8.5," SECONDS.")',TFINISH-TSTART
       ELSE IF(TRUN >= 60.0 .AND. TRUN<3600.0) THEN
-      PRINT '(" >>CALULATION TIME = ",F8.5," MINUTES.")',(TFINISH-TSTART)/60.0
+      PRINT '(" >>CALULATION TIME = ",F8.5," MINUTES.")',              &
+            (TFINISH-TSTART)/60.0
       ELSE IF(TRUN>=3600.0) THEN
-      PRINT '(" >>CALULATION TIME = ",ES14.5," HOURS.")',(TFINISH-TSTART)/3600.0
+      PRINT '(" >>CALULATION TIME = ",ES14.5," HOURS.")',              &
+            (TFINISH-TSTART)/3600.0
       END IF
       END PROGRAM DIS
