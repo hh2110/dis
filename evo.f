@@ -139,7 +139,7 @@
 !-----------------------------------------------------------------------
 ! PURE L1_2 ORDERED COMPOUND SCHEME #1A [1 LAYER]
 !-----------------------------------------------------------------------     
-          ELSE IF(GSF_EQ(PHID) == 11) THEN 
+          ELSE IF(GSF_EQ(PHID) == 11 .AND. ONDIFF ==0) THEN 
             DFDETA(IX,IY,IZ)=DFDETA(IX,IY,IZ)+
      &        (PI*(
      &        -GC(PHID,2)*(SIN(PI*(E1-E2))+SIN(PI*(E1-E3))) 
@@ -254,6 +254,10 @@
      &          4*COS(4*(-E1+E3)*PI))+ 
      &        GC(PHID,14)*(5*COS(5*(E1-E2)*PI)-
      &          5*COS(5*(-E1+E3)*PI)))     
+!-----------------------------------------------------------------------
+! PURE L1_2 ORDERED COMPOUND SCHEME #1B [1 LAYER]
+! WITH DIFFUSION!
+!-----------------------------------------------------------------------          
           ELSE IF(GSF_EQ(PHID) == 12 .AND. ONDIFF == 1) THEN
               ALPHAF=0.5+(0.5*TANH((A1-CON)/A2))
               DFDETA(IX,IY,IZ)=DFDETA(IX,IY,IZ)+

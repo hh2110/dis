@@ -301,8 +301,9 @@
       INTEGER :: STEPID       !! SIMULATION ITERATION
       INTEGER :: IX,IY,IZ     !! POSITION INDICES
       INTEGER ::  SA,SMA      !! SLIP SYSTEM, SLIP DIRECTION
-      REAL :: FE(NX,NY,NZ) !! GSF FAULT ENERGY
-      REAL :: E1,E2,E3     !! TEMPORARY ETAS
+      REAL :: FE(NX,NY,NZ)    !! GSF FAULT ENERGY
+      REAL :: E1,E2,E3,CON   !! TEMPORARY ETAS, CONC
+      REAL :: ALPHAF
 ! ASSIGN INITIAL VALUE TO FE     
       DO IX=1,NX
       DO IY=1,NY
@@ -313,13 +314,14 @@
       END DO
 ! 
       DO SA =1,NP
-!$OMP PARALLEL DO PRIVATE(IY,IX,E1,E2,E3,PHID)      
+!$OMP PARALLEL DO PRIVATE(IY,IX,E1,E2,E3,PHID,CON)      
       DO IZ=1,NZ
       DO IY=1,NY
       DO IX=1,NX
         E1=ETA(SA,1,IX,IY,IZ)
         E2=ETA(SA,2,IX,IY,IZ)
         E3=ETA(SA,3,IX,IY,IZ)
+        CON=CONC(IX,IY,IZ)
 !-----------------------------------------------------------------------
 ! CRYSTALLINE ENERGY FOR GAMMA PRIME PHASE      
 !-----------------------------------------------------------------------
@@ -352,7 +354,7 @@
 !-----------------------------------------------------------------------
 ! PURE L1_2 ORDERED COMPOUND SCHEME #1A [1 LAYER]
 !-----------------------------------------------------------------------      
-        ELSE IF(GSF_EQ(PHID) == 11) THEN
+        ELSE IF(GSF_EQ(PHID) == 11 .AND. ONDIFF == 0) THEN
           FE(IX,IY,IZ) =FE(IX,IY,IZ) + (
      &      GC(PHID,1)+
      &      GC(PHID,2)*(COS(PI*(E1-E2))+COS(PI*(E2-E3))+
@@ -384,7 +386,7 @@
 !-----------------------------------------------------------------------
 ! PURE L1_2 ORDERED COMPOUND SCHEME #1B [1 LAYER]
 !-----------------------------------------------------------------------      
-        ELSE IF(GSF_EQ(PHID) == 12) THEN
+        ELSE IF(GSF_EQ(PHID) == 12 .AND. ONDIFF == 0) THEN
           FE(IX,IY,IZ) =FE(IX,IY,IZ) + (
      &      GC(PHID,1)+
      &      GC(PHID,2)*(COS(PI*(E1-E2))+COS(PI*(E2-E3))+
@@ -419,7 +421,7 @@
 !-----------------------------------------------------------------------
 ! PURE FCC SCHEME #2 WITH [2 LAYERS]
 !-----------------------------------------------------------------------     
-        ELSE IF(GSF_EQ(PHID) == 20) THEN  
+        ELSE IF(GSF_EQ(PHID) == 20 .AND. ONDIFF == 0) THEN  
           FE(IX,IY,IZ) =FE(IX,IY,IZ)+ (
      &      GC(PHID,1)+ 
      &      GC(PHID,4)*(COS(2*(E1-E2)*PI)+COS(2*(E2-E3)*PI)+ 
@@ -440,7 +442,7 @@
 !-----------------------------------------------------------------------
 ! PURE L1_2 ORDERED COMPOUND SCHEME #2B [2 LAYERS] SOLVER 4
 !-----------------------------------------------------------------------     
-        ELSE IF(GSF_EQ(PHID) == 21) THEN  
+        ELSE IF(GSF_EQ(PHID) == 21 .AND. ONDIFF == 0) THEN  
           FE(IX,IY,IZ) =FE(IX,IY,IZ)+ (
      &      GC(PHID,1)+ 
      &      GC(PHID,2)*(COS((E1-E2)*PI)+COS((E2-E3)*PI)+ 
@@ -469,6 +471,72 @@
      &        SIN(4*(-E1+E3)*PI))+ 
      &      GC(PHID,14)*(SIN(5*(E1-E2)*PI)+SIN(5*(E2-E3)*PI)+ 
      &        SIN(5*(-E1+E3)*PI)))     
+!-----------------------------------------------------------------------
+! PURE L1_2 ORDERED COMPOUND SCHEME #1B [1 LAYER]
+! WITH DIFFUSION!
+!-----------------------------------------------------------------------          
+          ELSE IF(GSF_EQ(PHID) == 12 .AND. ONDIFF == 1) THEN
+              ALPHAF=0.5+(0.5*TANH((A1-CON)/A2))
+              FE(IX,IY,IZ)=FE(IX,IY,IZ)+
+     &          (     !3
+     &          (     !1 
+     &           ((ALPHAF*GC(2,1))+((1-ALPHAF)*GC(3,1)))
+     &          +((ALPHAF*GC(2,2))+((1-ALPHAF)*GC(3,2)))*
+     &                   (COS(PI*(E1-E2))+
+     &                    COS(PI*(E2-E3))+
+     &                    COS(PI*(E1-E3)))
+     &          +((ALPHAF*GC(2,3))+((1-ALPHAF)*GC(3,3)))*
+     &                   (COS(PI*(2*E1-E2-E3))+
+     &                    COS(PI*(E1-2*E2+E3))+
+     &                    COS(PI*(E1+E2-2*E3)))
+     &          +((ALPHAF*GC(2,4))+((1-ALPHAF)*GC(3,4)))*
+     &                   (COS(TWOPI*(E1-E2))+
+     &                    COS(TWOPI*(E2-E3))+
+     &                    COS(TWOPI*(E1-E3)) )
+     &          +((ALPHAF*GC(2,5))+((1-ALPHAF)*GC(3,5)))*
+     &                   (COS(PI*(2*E1-3*E2+E3))+
+     &                    COS(PI*(3*E1-2*E2-E3))+
+     &                    COS(PI*(2*E1+E2-3*E3))+
+     &                    COS(PI*(E1+2*E2-3*E3))+
+     &                    COS(PI*(3*E1-E2-2*E3))+
+     &                    COS(PI*(E1-3*E2+2*E3)))
+     &          +((ALPHAF*GC(2,6))+((1-ALPHAF)*GC(3,6)))*
+     &                   (COS(3*PI*(E1-E2))+
+     &                    COS(3*PI*(E2-E3))+
+     &                    COS(3*PI*(E1-E3)))
+     &          +((ALPHAF*GC(2,7))+((1-ALPHAF)*GC(3,7)))*
+     &                   (COS(TWOPI*(2*E1-E2-E3))+
+     &                    COS(TWOPI*(E1-2*E2+E3)) +
+     &                    COS(TWOPI*(E1+E2-2*E3)))
+     &          +((ALPHAF*GC(2,8))+((1-ALPHAF)*GC(3,8)))*
+     &                   (COS(4*PI*(E1-E2))+
+     &                    COS(4*PI*(E2-E3))+
+     &                    COS(4*PI*(E1-E3)))
+     &          +((ALPHAF*GC(2,10))+((1-ALPHAF)*GC(3,10)))*
+     &                    (SIN(PI*(E1-E2))+
+     &                     SIN(PI*(E2-E3))+
+     &                     SIN(PI*(E3-E1)))
+     &          +((ALPHAF*GC(2,11))+((1-ALPHAF)*GC(3,11)))*
+     &                    (SIN(TWOPI*(E1-E2))+
+     &                     SIN(TWOPI*(E2-E3))+
+     &                     SIN(TWOPI*(E3-E1)))
+     &          +((ALPHAF*GC(2,12))+((1-ALPHAF)*GC(3,12)))*
+     &                    (SIN(PI*(2*E1-3*E2+E3))+
+     &                     SIN(PI*(3*E1-2*E2-E3))-
+     &                     SIN(PI*(2*E1+E2-3*E3))+
+     &                     SIN(PI*(E1+2*E2-3*E3))-
+     &                     SIN(PI*(3*E1-E2-2*E3))-
+     &                     SIN(PI*(E1-3*E2+2*E3)))
+     &          +((ALPHAF*GC(2,13))+((1-ALPHAF)*GC(3,13)))*
+     &                    (SIN(3*PI*(E1-E2))+
+     &                     SIN(3*PI*(E2-E3))+
+     &                     SIN(3*PI*(E3-E1)))
+     &          +((ALPHAF*GC(2,14))+((1-ALPHAF)*GC(3,14)))*
+     &                    (SIN(4*PI*(E1-E2))+
+     &                     SIN(4*PI*(E2-E3))+
+     &                     SIN(4*PI*(E3-E1)))
+     &          )  !1
+     &          ) !3
         END IF
 !
       END DO
