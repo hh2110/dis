@@ -8,8 +8,8 @@
 !
 ! READ PARAMETER VALUES FROM EXTERNAL INPUT FILE (par.inp)
       OPEN(UNIT=11, FILE='par.inp', STATUS='UNKNOWN')
-      READ(11,100) FFTP,NOMP,OUTGE,OUTFE,OUTETAS,OUTCONC,INITBENCH,
-     &         NX,NY,NZ,BORDERSTARTX,BORDERENDX,BORDERSTARTY,
+      READ(11,100) FFTP,NOMP,OUTGE,OUTFE,OUTETAS,OUTCONC,OUTSTRA,
+     &         INITBENCH,NX,NY,NZ,BORDERSTARTX,BORDERENDX,BORDERSTARTY,
      &         BORDERENDY,BORDERSTARTZ,BORDERENDZ,
      &         T0,DT,OUT1,OUTDIM,SLICE_AXIS,SLICE_POS,
      &         AA,C11X,C12X,C44X,DXD,S_APP_MAG,
@@ -23,6 +23,7 @@
      &       19X, I3/,
      &       19X, I3/,     
      &       19X, I3/,
+     &       19X, I3/,     
      &       19X, I3/,     
      &       19X, I3/,     
      &       19X, I3/,
@@ -84,6 +85,7 @@
       PRINT '(" OUTPUT FAULT E.   =",I8)', OUTFE
       PRINT '(" OUTPUT ETAS       =",I8)', OUTETAS
       PRINT '(" OUTPUT CONC       =",I8)', OUTCONC
+      PRINT '(" OUTPUT STRAIN     =",I8)', OUTSTRA
       PRINT '(" INIT. BENCHMARK   =",I8)', INITBENCH
       PRINT '(" ---------------------------")'        
       PRINT '(" SYSTEM SIZE X     =",I8)', NX
@@ -134,7 +136,7 @@
       PRINT '(" GAMMA SURFACE GP CS  =",I8)',GSURF(3)
       PRINT '(" ---------------------------")'        
       PRINT '(" INITIAL CONDITION =",I8)',NIN
-      PRINT '(" DIFFUSION ON? =",I8)',ONDIFF
+      PRINT '(" DIFFUSION ON =",I8)',ONDIFF
 ! VERIFY PARAMETERS
 !      
       IF(INITBENCH /= 0 .AND. INITBENCH /=1) THEN
@@ -170,6 +172,56 @@
 !                
 !-----------------------------------------------------------------------
       END SUBROUTINE PAR
+!-----------------------------------------------------------------------
+! SUBROUTINE TO OUTPUT STRAIN
+!-----------------------------------------------------------------------
+      SUBROUTINE OSE(STEPID)
+      USE VAR 
+      IMPLICIT NONE
+! DEFINE VARIABLES     
+      INTEGER :: STEPID
+      INTEGER :: IX,IY,IZ,SA,SMA,FN,I,J
+! PRINT STRAIN TO FILE #51-59!
+!$OMP PARALLEL DO PRIVATE(IY,IX,I,J)
+      DO IZ=1,NZ
+      DO IY=1,NY
+      DO IX=1,NX
+        DO I=1,3
+        DO J=1,3
+          SE0(I,J,IX,IY,IZ) =0.0
+        END DO
+        END DO
+      END DO
+      END DO
+      END DO
+!$OMP END PARALLEL DO 
+      FN=50
+!$OMP PARALLEL DO PRIVATE(IY,IZ,SA,SMA,I,J)
+      DO IX=1,NX
+      DO IY=1,NY
+      DO IZ=1,NZ
+        DO SA=1,NP
+        DO SMA=1,NQ
+          DO I=1,3
+          DO J=1,3
+            SE0(I,J,IX,IY,IZ)=SE0(I,J,IX,IY,IZ)+
+     &                        (E0(SA,SMA,I,J)*ETA(SA,SMA,IX,IY,IZ))
+          END DO
+          END DO
+        END DO
+        END DO
+      END DO
+      END DO
+      END DO
+!$OMP END PARALLEL DO 
+      DO I=1,3
+      DO J=1,3
+        FN=FN+1
+        WRITE(FN,*) (((SE0(I,J,IX,IY,IZ),IZ=1,NZ),IY=1,NY),IX=1,NX)
+      END DO
+      END DO
+! 
+      END SUBROUTINE OSE
 !-----------------------------------------------------------------------
 ! SUBROUTINE TO OUTPUT CONC RELATED VARIABLES
 !-----------------------------------------------------------------------
@@ -626,12 +678,21 @@
       IMPLICIT NONE
       INTEGER :: SA,SMA      !! SLIP PLANE AND DIRECTION IDs
       INTEGER :: UNITCOUNT   !! OUTPUT FILE NUMBER (UNIT)
+      CHARACTER (len=90) :: FILEN !! for STRAIN OUTPUTS
 !
 !-----------------------------------------------------------------------
 !------WILL NEED TO DELETE LATER----------------------------------------
       OPEN(UNIT=1011,FILE='timer.dat',STATUS='UNKNOWN')
 !-----------------------------------------------------------------------
 !-----------------------------------------------------------------------
+      IF (OUTSTRA==0) THEN
+      ELSE IF (OUTSTRA==1) THEN
+      DO SA=51,59
+        WRITE (FILEN, '( "strain", I1, ".dis" )' ) SA-50
+        OPEN(UNIT=SA,FILE=FILEN,STATUS='UNKNOWN')
+      END DO
+      END IF
+!
       IF (OUTCONC==0) THEN
       ELSE IF (OUTCONC==1) THEN
       OPEN(UNIT=50,FILE='conc.dis',STATUS='UNKNOWN')
@@ -671,6 +732,14 @@
       INTEGER :: SA,SMA      !! SLIP PLANE AND DIRECTION IDs
       INTEGER :: UNITCOUNT   !! OUTPUT FILE NUMBER (UNIT)      
 ! CLOSE ALL FILES
+!
+      IF (OUTSTRA==0) THEN
+        PRINT *,'>>NOTE - CONCENTRATION WILL NOT BE SAVED'
+      ELSE IF (OUTSTRA==1) THEN
+      DO SA=51,59
+        CLOSE(SA)
+      END DO
+      END IF
 !
       IF (OUTCONC==0) THEN
         PRINT *,'>>NOTE - CONCENTRATION WILL NOT BE SAVED'

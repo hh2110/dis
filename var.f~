@@ -84,7 +84,7 @@
       REAL,ALLOCATABLE :: C0(:,:,:)           !! position of chemical BFE curve
       REAL,ALLOCATABLE :: CONCFE(:,:,:)
       REAL,ALLOCATABLE :: ALPDG(:,:,:),FBENERGY(:,:,:), CONCGE(:,:,:)
-      REAL :: DELTAGSISF          !!difference in SISFE
+      REAL,ALLOCATABLE :: DELTAGSISF          !!difference in SISFE
 ! PARAMETERS
       REAL, PARAMETER :: CG = 0.02    !!equilibrium concentration Gamma
       REAL, PARAMETER :: CGP = 0.3    !!equilibrium concentration GPrime

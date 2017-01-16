@@ -101,6 +101,14 @@
           IF( (STEPNO==0) .OR. (ICOUNT >= SFREQ .AND. OUT1 /= 0) ) THEN
             PRINT '(" TIME=",F8.2)',STEPNO*DT        
 !
+            IF(OUTSTRA == 0) THEN
+            ELSE IF (OUTSTRA == 1) THEN
+              CALL OSE(STEPNO)
+            ELSE
+              STOP '>>ERROR - INVALID OUTSTRA IN PAR.INP - ENTER 0-NO  &
+                   or 1-YES'
+            END IF
+!
             IF(OUTCONC == 0) THEN
             ELSE IF (OUTCONC == 1) THEN
               CALL OCE(STEPNO)
