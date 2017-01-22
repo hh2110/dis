@@ -173,14 +173,17 @@
 !-----------------------------------------------------------------------
       END SUBROUTINE PAR
 !-----------------------------------------------------------------------
-! SUBROUTINE TO OUTPUT STRAIN
+! SUBROUTINE TO OUTPUT STRAIN & STRAIN ENERGY
 !-----------------------------------------------------------------------
       SUBROUTINE OSE(STEPID)
       USE VAR 
       IMPLICIT NONE
 ! DEFINE VARIABLES     
       INTEGER :: STEPID
-      INTEGER :: IX,IY,IZ,SA,SMA,FN,I,J
+      INTEGER :: IX,IY,IZ,SA,SMA,FN,I,J,K,L
+      REAL    :: SEN(NX,NY,NZ) ! STRAIN ENERGY (1/2.C.e.e)
+      REAL    :: TSEN          ! TOTAL STRAIN ENERGY IN SYSTEM (SEN*V)
+      REAL    :: VOL           ! VOLUME OF 1 VOXEL
 ! PRINT STRAIN TO FILE #51-59!
 !$OMP PARALLEL DO PRIVATE(IY,IX,I,J)
       DO IZ=1,NZ
@@ -214,13 +217,61 @@
       END DO
       END DO
 !$OMP END PARALLEL DO 
+! PRINTING STRAIN
       DO I=1,3
       DO J=1,3
         FN=FN+1
-        WRITE(FN,*) (((SE0(I,J,IX,IY,IZ),IZ=1,NZ),IY=1,NY),IX=1,NX)
+        IF (OUTDIM == 2) THEN
+          IF (SLICE_AXIS == 1) THEN      
+            WRITE(FN,*) ((SE0(I,J,SLICE_POS,IY,IZ),IZ=1,NZ),IY=1,NY)
+          ELSE IF (SLICE_AXIS == 2) THEN
+            WRITE(FN,*) ((SE0(I,J,IX,SLICE_POS,IZ),IZ=1,NZ),IX=1,NX)
+          ELSE IF (SLICE_AXIS == 3) THEN      
+            WRITE(FN,*) ((SE0(I,J,IX,IY,SLICE_POS),IY=1,NY),IX=1,NX)
+          END IF  
+        ELSE IF (OUTDIM == 3) THEN
+          WRITE(FN,*) (((SE0(I,J,IX,IY,IZ),IZ=1,NZ),IY=1,NY),IX=1,NX)
+        END IF  
       END DO
       END DO
 ! 
+! CALCULATING STRAIN ENERGY
+      VOL=(AA*SD)**3    !SD=A0/sqrt(3)=1/sqrt(3)
+      TSEN=0
+!$OMP PARALLEL DO PRIVATE(IY,IX,I,J,K,L)
+      DO IZ=1,NZ
+      DO IY=1,NY
+      DO IX=1,NX
+        SEN(IX,IY,IZ)=0.0 !INITIALISING TO ZERO
+        DO I=1,3
+        DO J=1,3
+        DO K=1,3
+        DO L=1,3
+          SEN(IX,IY,IZ) = SEN(IX,IY,IZ) + (0.5*DXD*CIJKL(I,J,K,L)*
+     &                  SE0(I,J,IX,IY,IZ)*SE0(K,L,IX,IY,IZ))
+        END DO
+        END DO
+        END DO
+        END DO
+        TSEN=TSEN+(SEN(IX,IY,IZ)*VOL)
+      END DO
+      END DO
+      END DO
+!$OMP END PARALLEL DO 
+! PRINTING STRAIN ENERGY
+      IF (OUTDIM == 2) THEN
+        IF (SLICE_AXIS == 1) THEN      
+          WRITE(60,*) ((SEN(SLICE_POS,IY,IZ),IZ=1,NZ),IY=1,NY)
+        ELSE IF (SLICE_AXIS == 2) THEN      
+          WRITE(60,*) ((SEN(IX,SLICE_POS,IZ),IZ=1,NZ),IX=1,NX)
+        ELSE IF (SLICE_AXIS == 3) THEN      
+          WRITE(60,*) ((SEN(IX,IY,SLICE_POS),IY=1,NY),IX=1,NX)
+        END IF  
+      ELSE IF (OUTDIM == 3) THEN
+        WRITE(60,*) (((SEN(IX,IY,IZ),IZ=1,NZ),IY=1,NY),IX=1,NX)
+      END IF  
+      WRITE(61,*) TSEN
+!
       END SUBROUTINE OSE
 !-----------------------------------------------------------------------
 ! SUBROUTINE TO OUTPUT CONC RELATED VARIABLES
@@ -328,17 +379,17 @@
 ! OUTPUT GE
       IF (OUTDIM == 2) THEN
         IF (SLICE_AXIS == 1) THEN      
-          WRITE(20,*) 'T=',STEPID*DT
+!          WRITE(20,*) 'T=',STEPID*DT
           WRITE(20,*) ((TPR(SLICE_POS,IY,IZ),IZ=1,NZ),IY=1,NY)
         ELSE IF (SLICE_AXIS == 2) THEN      
-          WRITE(20,*) 'T=',STEPID*DT
+!          WRITE(20,*) 'T=',STEPID*DT
           WRITE(20,*) ((TPR(IX,SLICE_POS,IZ),IZ=1,NZ),IX=1,NX)
         ELSE IF (SLICE_AXIS == 3) THEN      
-          WRITE(20,*) 'T=',STEPID*DT
+!          WRITE(20,*) 'T=',STEPID*DT
           WRITE(20,*) ((TPR(IX,IY,SLICE_POS),IY=1,NY),IX=1,NX)
         END IF  
       ELSE IF (OUTDIM == 3) THEN
-        WRITE(20,*) 'T=',STEPID*DT
+!        WRITE(20,*) 'T=',STEPID*DT
         WRITE(20,*) (((TPR(IX,IY,IZ),IZ=1,NZ),IY=1,NY),IX=1,NX)
       END IF  
 !
@@ -632,7 +683,7 @@
         IF (SLICE_AXIS == 1) THEN        
           DO SA=1,NP
           DO SMA=1,NQ
-            WRITE(UNITCOUNT,*) 'T=',STEPID*DT
+!            WRITE(UNITCOUNT,*) 'T=',STEPID*DT
             WRITE(UNITCOUNT,*) ((ETA(SA,SMA,SLICE_POS,IY,IZ)
      &      ,IZ=1,NZ),IY=1,NY)
             UNITCOUNT=UNITCOUNT+1
@@ -641,7 +692,7 @@
         ELSE IF (SLICE_AXIS == 2) THEN        
           DO SA=1,NP
           DO SMA=1,NQ
-            WRITE(UNITCOUNT,*) 'T=',STEPID*DT
+!            WRITE(UNITCOUNT,*) 'T=',STEPID*DT
             WRITE(UNITCOUNT,*) ((ETA(SA,SMA,IX,SLICE_POS,IZ)
      &      ,IZ=1,NZ),IX=1,NX)
             UNITCOUNT=UNITCOUNT+1
@@ -650,7 +701,7 @@
         ELSE IF (SLICE_AXIS == 3) THEN        
           DO SA=1,NP
           DO SMA=1,NQ
-            WRITE(UNITCOUNT,*) 'T=',STEPID*DT
+!            WRITE(UNITCOUNT,*) 'T=',STEPID*DT
             WRITE(UNITCOUNT,*) ((ETA(SA,SMA,IX,IY,SLICE_POS)
      &      ,IY=1,NY),IX=1,NX)
             UNITCOUNT=UNITCOUNT+1
@@ -687,10 +738,12 @@
 !-----------------------------------------------------------------------
       IF (OUTSTRA==0) THEN
       ELSE IF (OUTSTRA==1) THEN
-      DO SA=51,59
-        WRITE (FILEN, '( "strain", I1, ".dis" )' ) SA-50
-        OPEN(UNIT=SA,FILE=FILEN,STATUS='UNKNOWN')
-      END DO
+        DO SA=51,59
+          WRITE (FILEN, '( "strain", I1, ".dis" )' ) SA-50
+          OPEN(UNIT=SA,FILE=FILEN,STATUS='UNKNOWN')
+        END DO
+        OPEN(UNIT=60, FILE='strainXYZ.dis',STATUS='UNKNOWN')
+        OPEN(UNIT=61, FILE='strainTotal.dis',STATUS='UNKNOWN')
       END IF
 !
       IF (OUTCONC==0) THEN
@@ -734,11 +787,13 @@
 ! CLOSE ALL FILES
 !
       IF (OUTSTRA==0) THEN
-        PRINT *,'>>NOTE - CONCENTRATION WILL NOT BE SAVED'
+        PRINT *,'>>NOTE - STRAIN, STRAIN ENERGY WILL NOT BE SAVED'
       ELSE IF (OUTSTRA==1) THEN
-      DO SA=51,59
-        CLOSE(SA)
-      END DO
+        CLOSE(60)
+        CLOSE(61)      
+        DO SA=51,59
+          CLOSE(SA)
+        END DO
       END IF
 !
       IF (OUTCONC==0) THEN

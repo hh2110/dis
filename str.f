@@ -11,7 +11,6 @@
       INTEGER :: IX,IY,IZ         !! POSITION INDICES
       INTEGER :: SA,SMA           !! INDICES OF SLIP PLANES AND DIRECTIONS
       INTEGER :: SAP,SMAP         !! SA', SMA'
-      REAL :: SD                  !! INTERPLANAR SPACING =A0/SQRT(3)<-FCC
       REAL :: C0IJKL(3,3,3,3)     !! COMPLIANCE MATRIX
       REAL :: TP1, TP2, TP3       !! TRANSFORMATION COSINES
       REAL :: LIIP,LJJP,LKKP,LLLP
@@ -31,6 +30,7 @@
       END DO
       END DO
       END DO
+!      
 ! ASSIGN ELASTIC CONSTANTS TO MATRIX 
       C0IJKL(1,1,1,1) =C11
       C0IJKL(2,2,2,2) =C11
@@ -38,12 +38,12 @@
       C0IJKL(1,1,2,2) =C12
       C0IJKL(2,2,3,3) =C12
       C0IJKL(3,3,1,1) =C12
-      C0IJKL(1,2,1,2) =C44
-      C0IJKL(2,3,2,3) =C44
-      C0IJKL(3,1,3,1) =C44
       C0IJKL(2,2,1,1) =C12
       C0IJKL(3,3,2,2) =C12
       C0IJKL(1,1,3,3) =C12
+      C0IJKL(1,2,1,2) =C44
+      C0IJKL(2,3,2,3) =C44
+      C0IJKL(3,1,3,1) =C44
       C0IJKL(2,1,2,1) =C44
       C0IJKL(1,2,2,1) =C44
       C0IJKL(2,1,1,2) =C44
@@ -117,6 +117,23 @@
         END DO
         END DO
       END DO
+      END DO
+!
+      PRINT *,'>>NOTE - THE TRANSFORMATION STRAIN MATRICES'
+      PRINT *,'>>NOTE - SLPLANE \\ SLPDIR \\ STRAIN'
+      DO SA=1,NP
+        PRINT '(I3)',SA
+        DO SMA=1,NQ
+          PRINT '(I3)',SMA
+          PRINT'(F9.5,F9.5,F9.5)',
+     &          E0(SA,SMA,1,1),E0(SA,SMA,1,2),E0(SA,SMA,1,3)
+          PRINT'(F9.5,F9.5,F9.5)',
+     &          E0(SA,SMA,2,1),E0(SA,SMA,2,2),E0(SA,SMA,2,3)
+          PRINT'(F9.5,F9.5,F9.5)',
+     &          E0(SA,SMA,3,1),E0(SA,SMA,3,2),E0(SA,SMA,3,3)
+          PRINT *,' '
+        END DO
+        PRINT *,' '
       END DO
 ! DEFINITION TRANSFORMATION STRESS S0
       DO SA=1,NP

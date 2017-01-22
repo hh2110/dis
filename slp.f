@@ -123,12 +123,13 @@
       IF (ROTFLAG == 0) THEN          
       PRINT *,'>>NOTE - NO ROTATION APPLIED TO CRYSTAL'            
       ELSE IF (ROTFLAG == 1) THEN
-      PRINT *,'>>NOTE - APPLYING ROTATION MATRIX TO CRYSTAL AXES'           
+      PRINT *,'>>NOTE - APPLYING ROTATION MATRIX TO CRYSTAL AXES' 
 !        
       CALL ORT
 !
       CALL ROM
 !        
+! FIRST ROTATE THE NVs
         DO SA=1,NP
           DO I=1,3
             TV1(I)=NV(SA,I)
@@ -139,6 +140,7 @@
           END DO
         END DO  
 !         
+! THEN  ROTATE THE BVs
         DO SA=1,NP
         DO SMA=1,NQ
           DO I=1,3
@@ -151,6 +153,24 @@
         END DO
         END DO
 !          
+      PRINT *,'>>NOTE - THE NEW COORDINATE AXES ARE'
+      PRINT '(F9.5,F9.5,F9.5)',AXX(1),AXX(2),AXX(3)
+      PRINT '(F9.5,F9.5,F9.5)',AXY(1),AXY(2),AXY(3)
+      PRINT '(F9.5,F9.5,F9.5)',AXZ(1),AXZ(2),AXZ(3)
+!
+      PRINT *,'>>NOTE - THE NEW NV/s'
+      DO SA=1,NP
+        PRINT '(I3,F9.5,F9.5,F9.5)',SA,NV(SA,1),NV(SA,2),NV(SA,3)
+      END DO
+!
+      PRINT *,'>>NOTE - THE NEW BVs'
+      DO SA=1,NP
+      DO SMA=1,NQ
+        PRINT '(I3,I3,F9.5,F9.5,F9.5)',
+     &         SA,SMA,BV(SA,SMA,1),BV(SA,SMA,2),BV(SA,SMA,3)
+      END DO
+      END DO
+!
       END IF      
       END SUBROUTINE SLP
 !-----------------------------------------------------------------------
