@@ -39,6 +39,7 @@
       REAL,ALLOCATABLE :: G(:,:,:,:)         !! K (IJK)COMPONENTS
       REAL,ALLOCATABLE :: BPQ(:,:,:,:,:,:,:) !! BPQ MATRIX
       REAL :: CIJKL(3,3,3,3)                 !! COMPLIANCE MATRIX
+      REAL :: C0IJKL(3,3,3,3)                !! COMPLIANCE MATRIX IN CRYSTAL AXES
       REAL,ALLOCATABLE :: E0(:,:,:,:)        !! TRANSFORMATION STRAIN
       REAL,ALLOCATABLE :: SE0(:,:,:,:,:)     !! SYSTEM TRANSFORMATION STRAIN
       REAL,ALLOCATABLE :: S0(:,:,:,:)        !! TRANSFORMATION STRESS

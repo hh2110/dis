@@ -6,9 +6,9 @@
       INTEGER :: NSTEPS             !! TOTAL NUMBER OF ITERATIONS 
       INTEGER :: SFREQ              !! OUTPUT SAMPLING FREQUENCY
       INTEGER :: ICOUNT             !! ITERATION COUNTER
-      INTEGER :: IX,IY,IZ           !! POSITION VECTOR INDICES
-      REAL :: TS0, TS1, TS2, TS3, TS4, TS5
-      REAL :: TE0, TE1, TE2, TE3, TE4, TE5
+      INTEGER :: IX,IY,IZ,I,J,K,L   !! POSITION VECTOR INDICES
+      REAL(KIND=8) :: TS0, TS1, TS2, TS3, TS4, TS5
+      REAL(KIND=8) :: TE0, TE1, TE2, TE3, TE4, TE5
 ! SET UP OPENMP STUFF     
       REAL(KIND=8) :: OMP_GET_WTIME !! OMP TIMER
 ! LOG THE SIMULATION START TIME      
@@ -84,19 +84,43 @@
         CALL OPN
 !        
         ICOUNT =0
-!        
+!
+!        DO I=1,3
+!        DO J=1,3
+!        DO K=1,3
+!        DO L=1,3
+!          IF (C0IJKL(I,J,K,L) < 1.0E-7) THEN
+!            C0IJKL(I,J,K,L)=0.0
+!          END IF
+!          IF (CIJKL(I,J,K,L) < 1.0E-7) THEN
+!            CIJKL(I,J,K,L)=0.0
+!          END IF
+!          PRINT *, CIJKL(I,J,K,L), C0IJKL(I,J,K,L)
+!        END DO
+!        END DO
+!        END DO
+!        END DO
+!         
         EVOSTART=OMP_GET_WTIME()         
-        WRITE(1011,*) EVOSTART
-        DO STEPNO=0,NSTEPS      
+        DO STEPNO=0,NSTEPS
+          TS0=0.0
+          TE0=0.0
+          TS1=0.0
+          TE1=0.0
+          TS0=OMP_GET_WTIME()      
           CALL EVO(STEPNO)
+          TE0=OMP_GET_WTIME()      
 !
           IF(ONDIFF == 0) THEN
           ELSE IF (ONDIFF == 1) THEN
+            TS1=OMP_GET_WTIME()      
             CALL DIF(STEPNO)
+            TE1=OMP_GET_WTIME()      
           ELSE
             STOP '>>ERROR - INVALID ONDIFF IN PAR.INP - ENTER 0-NO OR  &
                  1-YES'
           END IF
+          WRITE(1011,*) TE0-TS0, TE1-TS1
 !          
           IF( (STEPNO==0) .OR. (ICOUNT >= SFREQ .AND. OUT1 /= 0) ) THEN
             PRINT '(" TIME=",F8.2)',STEPNO*DT        

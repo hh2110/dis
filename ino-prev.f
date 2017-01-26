@@ -8,8 +8,8 @@
 !
 ! READ PARAMETER VALUES FROM EXTERNAL INPUT FILE (par.inp)
       OPEN(UNIT=11, FILE='par.inp', STATUS='UNKNOWN')
-      READ(11,100) FFTP,NOMP,OUTGE,OUTFE,OUTETAS,OUTCONC,OUTSTRA,
-     &         INITBENCH,NX,NY,NZ,BORDERSTARTX,BORDERENDX,BORDERSTARTY,
+      READ(11,100) FFTP,NOMP,OUTGE,OUTFE,OUTETAS,OUTCONC,INITBENCH,
+     &         NX,NY,NZ,BORDERSTARTX,BORDERENDX,BORDERSTARTY,
      &         BORDERENDY,BORDERSTARTZ,BORDERENDZ,
      &         T0,DT,OUT1,OUTDIM,SLICE_AXIS,SLICE_POS,
      &         AA,C11X,C12X,C44X,DXD,S_APP_MAG,
@@ -23,7 +23,6 @@
      &       19X, I3/,
      &       19X, I3/,     
      &       19X, I3/,
-     &       19X, I3/,     
      &       19X, I3/,     
      &       19X, I3/,     
      &       19X, I3/,
@@ -85,7 +84,6 @@
       PRINT '(" OUTPUT FAULT E.   =",I8)', OUTFE
       PRINT '(" OUTPUT ETAS       =",I8)', OUTETAS
       PRINT '(" OUTPUT CONC       =",I8)', OUTCONC
-      PRINT '(" OUTPUT STRAIN     =",I8)', OUTSTRA
       PRINT '(" INIT. BENCHMARK   =",I8)', INITBENCH
       PRINT '(" ---------------------------")'        
       PRINT '(" SYSTEM SIZE X     =",I8)', NX
@@ -136,7 +134,7 @@
       PRINT '(" GAMMA SURFACE GP CS  =",I8)',GSURF(3)
       PRINT '(" ---------------------------")'        
       PRINT '(" INITIAL CONDITION =",I8)',NIN
-      PRINT '(" DIFFUSION ON =",I8)',ONDIFF
+      PRINT '(" DIFFUSION ON? =",I8)',ONDIFF
 ! VERIFY PARAMETERS
 !      
       IF(INITBENCH /= 0 .AND. INITBENCH /=1) THEN
@@ -172,114 +170,6 @@
 !                
 !-----------------------------------------------------------------------
       END SUBROUTINE PAR
-!-----------------------------------------------------------------------
-! SUBROUTINE TO OUTPUT STRAIN & STRAIN ENERGY
-!-----------------------------------------------------------------------
-      SUBROUTINE OSE(STEPID)
-      USE VAR 
-      IMPLICIT NONE
-! DEFINE VARIABLES     
-      INTEGER :: STEPID
-      INTEGER :: IX,IY,IZ,SA,SMA,FN,I,J,K,L
-      REAL    :: SEN(NX,NY,NZ) ! STRAIN ENERGY (1/2.C.e.e)
-      REAL    :: TSEN          ! TOTAL STRAIN ENERGY IN SYSTEM (SEN*V)
-      REAL    :: VOL           ! VOLUME OF 1 VOXEL
-      REAL    :: STC(3,3,NX,NY,NZ) !STRAIN FOR ORIGINAL CRYSTAL AXES
-      REAL    :: INVROT(3,3)       !INV ROT MAT FOR ABOVE STRAIN
-      REAL    :: TEMPMAT(3,3)       !Temporary matrix
-      REAL    :: TEMP1(3,3), TEMP2(3,3) ! "    "
-      CALL INV(ROT,INVROT)
-! PRINT STRAIN TO FILE #51-59!
-!$OMP PARALLEL DO PRIVATE(IY,IX,I,J)
-      DO IZ=1,NZ
-      DO IY=1,NY
-      DO IX=1,NX
-        DO I=1,3
-        DO J=1,3
-          SE0(I,J,IX,IY,IZ) =0.0
-          STC(I,J,IX,IY,IZ) =0.0
-        END DO
-        END DO
-      END DO
-      END DO
-      END DO
-!$OMP END PARALLEL DO 
-      FN=50
-      DO IX=1,NX
-      DO IY=1,NY
-      DO IZ=1,NZ
-        DO SA=1,NP
-        DO SMA=1,NQ
-          DO I=1,3
-          DO J=1,3
-            SE0(I,J,IX,IY,IZ)=SE0(I,J,IX,IY,IZ)+
-     &                        (E0(SA,SMA,I,J)*ETA(SA,SMA,IX,IY,IZ))
-          END DO
-          END DO
-        END DO
-        END DO
-! rotating stress back to crystal axis using R^T.SE0.R - see notes
-        TEMP1=SE0(:,:,IX,IY,IZ)
-        TEMP2=STC(:,:,IX,IY,IZ)
-        CALL MUL(TEMPMAT,INVROT,TEMP1)
-        CALL MUL(TEMP2,TEMPMAT,ROT)
-        STC(:,:,IX,IY,IZ)=TEMP2
-      END DO
-      END DO
-      END DO
-! PRINTING STRAIN
-      DO I=1,3
-      DO J=1,3
-        FN=FN+1
-        IF (OUTDIM == 2) THEN
-          IF (SLICE_AXIS == 1) THEN      
-            WRITE(FN,*) ((SE0(I,J,SLICE_POS,IY,IZ),IZ=1,NZ),IY=1,NY)
-          ELSE IF (SLICE_AXIS == 2) THEN
-            WRITE(FN,*) ((SE0(I,J,IX,SLICE_POS,IZ),IZ=1,NZ),IX=1,NX)
-          ELSE IF (SLICE_AXIS == 3) THEN      
-            WRITE(FN,*) ((SE0(I,J,IX,IY,SLICE_POS),IY=1,NY),IX=1,NX)
-          END IF  
-        ELSE IF (OUTDIM == 3) THEN
-          WRITE(FN,*) (((SE0(I,J,IX,IY,IZ),IZ=1,NZ),IY=1,NY),IX=1,NX)
-        END IF  
-      END DO
-      END DO
-! 
-! CALCULATING STRAIN ENERGY
-      TSEN=0
-      DO IZ=1,NZ
-      DO IY=1,NY
-      DO IX=1,NX
-        SEN(IX,IY,IZ)=0.0 !INITIALISING TO ZERO
-        DO I=1,3
-        DO J=1,3
-        DO K=1,3
-        DO L=1,3
-          SEN(IX,IY,IZ) = SEN(IX,IY,IZ) + (0.5*DXD*CIJKL(I,J,K,L)*
-     &                  SE0(I,J,IX,IY,IZ)*SE0(K,L,IX,IY,IZ))
-        END DO
-        END DO
-        END DO
-        END DO
-        TSEN=TSEN+(SEN(IX,IY,IZ))
-      END DO
-      END DO
-      END DO
-! PRINTING STRAIN ENERGY
-      IF (OUTDIM == 2) THEN
-        IF (SLICE_AXIS == 1) THEN      
-          WRITE(60,*) ((SEN(SLICE_POS,IY,IZ),IZ=1,NZ),IY=1,NY)
-        ELSE IF (SLICE_AXIS == 2) THEN      
-          WRITE(60,*) ((SEN(IX,SLICE_POS,IZ),IZ=1,NZ),IX=1,NX)
-        ELSE IF (SLICE_AXIS == 3) THEN      
-          WRITE(60,*) ((SEN(IX,IY,SLICE_POS),IY=1,NY),IX=1,NX)
-        END IF  
-      ELSE IF (OUTDIM == 3) THEN
-        WRITE(60,*) (((SEN(IX,IY,IZ),IZ=1,NZ),IY=1,NY),IX=1,NX)
-      END IF  
-      WRITE(61,*) TSEN
-!
-      END SUBROUTINE OSE
 !-----------------------------------------------------------------------
 ! SUBROUTINE TO OUTPUT CONC RELATED VARIABLES
 !-----------------------------------------------------------------------
@@ -386,17 +276,17 @@
 ! OUTPUT GE
       IF (OUTDIM == 2) THEN
         IF (SLICE_AXIS == 1) THEN      
-!          WRITE(20,*) 'T=',STEPID*DT
+          WRITE(20,*) 'T=',STEPID*DT
           WRITE(20,*) ((TPR(SLICE_POS,IY,IZ),IZ=1,NZ),IY=1,NY)
         ELSE IF (SLICE_AXIS == 2) THEN      
-!          WRITE(20,*) 'T=',STEPID*DT
+          WRITE(20,*) 'T=',STEPID*DT
           WRITE(20,*) ((TPR(IX,SLICE_POS,IZ),IZ=1,NZ),IX=1,NX)
         ELSE IF (SLICE_AXIS == 3) THEN      
-!          WRITE(20,*) 'T=',STEPID*DT
+          WRITE(20,*) 'T=',STEPID*DT
           WRITE(20,*) ((TPR(IX,IY,SLICE_POS),IY=1,NY),IX=1,NX)
         END IF  
       ELSE IF (OUTDIM == 3) THEN
-!        WRITE(20,*) 'T=',STEPID*DT
+        WRITE(20,*) 'T=',STEPID*DT
         WRITE(20,*) (((TPR(IX,IY,IZ),IZ=1,NZ),IY=1,NY),IX=1,NX)
       END IF  
 !
@@ -424,7 +314,7 @@
       END DO
 ! 
       DO SA =1,NP
-!$OMP PARALLEL DO PRIVATE(IY,IX,E1,E2,E3,PHID,CON,ALPHAF)      
+!$OMP PARALLEL DO PRIVATE(IY,IX,E1,E2,E3,PHID,CON)      
       DO IZ=1,NZ
       DO IY=1,NY
       DO IX=1,NX
@@ -690,7 +580,7 @@
         IF (SLICE_AXIS == 1) THEN        
           DO SA=1,NP
           DO SMA=1,NQ
-!            WRITE(UNITCOUNT,*) 'T=',STEPID*DT
+            WRITE(UNITCOUNT,*) 'T=',STEPID*DT
             WRITE(UNITCOUNT,*) ((ETA(SA,SMA,SLICE_POS,IY,IZ)
      &      ,IZ=1,NZ),IY=1,NY)
             UNITCOUNT=UNITCOUNT+1
@@ -699,7 +589,7 @@
         ELSE IF (SLICE_AXIS == 2) THEN        
           DO SA=1,NP
           DO SMA=1,NQ
-!            WRITE(UNITCOUNT,*) 'T=',STEPID*DT
+            WRITE(UNITCOUNT,*) 'T=',STEPID*DT
             WRITE(UNITCOUNT,*) ((ETA(SA,SMA,IX,SLICE_POS,IZ)
      &      ,IZ=1,NZ),IX=1,NX)
             UNITCOUNT=UNITCOUNT+1
@@ -708,7 +598,7 @@
         ELSE IF (SLICE_AXIS == 3) THEN        
           DO SA=1,NP
           DO SMA=1,NQ
-!            WRITE(UNITCOUNT,*) 'T=',STEPID*DT
+            WRITE(UNITCOUNT,*) 'T=',STEPID*DT
             WRITE(UNITCOUNT,*) ((ETA(SA,SMA,IX,IY,SLICE_POS)
      &      ,IY=1,NY),IX=1,NX)
             UNITCOUNT=UNITCOUNT+1
@@ -736,23 +626,12 @@
       IMPLICIT NONE
       INTEGER :: SA,SMA      !! SLIP PLANE AND DIRECTION IDs
       INTEGER :: UNITCOUNT   !! OUTPUT FILE NUMBER (UNIT)
-      CHARACTER (len=90) :: FILEN !! for STRAIN OUTPUTS
 !
 !-----------------------------------------------------------------------
 !------WILL NEED TO DELETE LATER----------------------------------------
       OPEN(UNIT=1011,FILE='timer.dat',STATUS='UNKNOWN')
 !-----------------------------------------------------------------------
 !-----------------------------------------------------------------------
-      IF (OUTSTRA==0) THEN
-      ELSE IF (OUTSTRA==1) THEN
-        DO SA=51,59
-          WRITE (FILEN, '( "strain", I1, ".dis" )' ) SA-50
-          OPEN(UNIT=SA,FILE=FILEN,STATUS='UNKNOWN')
-        END DO
-        OPEN(UNIT=60, FILE='strainXYZ.dis',STATUS='UNKNOWN')
-        OPEN(UNIT=61, FILE='strainTotal.dis',STATUS='UNKNOWN')
-      END IF
-!
       IF (OUTCONC==0) THEN
       ELSE IF (OUTCONC==1) THEN
       OPEN(UNIT=50,FILE='conc.dis',STATUS='UNKNOWN')
@@ -792,16 +671,6 @@
       INTEGER :: SA,SMA      !! SLIP PLANE AND DIRECTION IDs
       INTEGER :: UNITCOUNT   !! OUTPUT FILE NUMBER (UNIT)      
 ! CLOSE ALL FILES
-!
-      IF (OUTSTRA==0) THEN
-        PRINT *,'>>NOTE - STRAIN, STRAIN ENERGY WILL NOT BE SAVED'
-      ELSE IF (OUTSTRA==1) THEN
-        CLOSE(60)
-        CLOSE(61)      
-        DO SA=51,59
-          CLOSE(SA)
-        END DO
-      END IF
 !
       IF (OUTCONC==0) THEN
         PRINT *,'>>NOTE - CONCENTRATION WILL NOT BE SAVED'
