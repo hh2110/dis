@@ -130,7 +130,8 @@
         DO IZ=1,NZ
         DO IY=NY/2,NY/2
         DO IX=1,NX
-          IF(IZ >= 15 .AND. IZ < 60) THEN
+!          IF(IZ >= 15 .AND. IZ < 60) THEN
+          IF(IZ >= 5 .AND. IZ < 15) THEN
             ETA(1,3,IX,IY,IZ)=-1.0
             ETA(1,2,IX,IY,IZ)= 1.0
           END IF
@@ -139,7 +140,8 @@
         END DO
 ! INITIALISING PHI
         DO IY=1,NY
-          OPEN (UNIT = 91, FILE = 'i_micro_238.inp',STATUS = 'UNKNOWN')
+!          OPEN (UNIT = 91, FILE = 'i_micro_238.inp',STATUS = 'UNKNOWN')
+          OPEN (UNIT = 91, FILE = '58_120_VF55.inp',STATUS = 'UNKNOWN')
           READ (91,*) ((PHI(IX,IY,IZ),IZ=1,NZ),IX=1,NX)
           CLOSE(91)
         END DO
